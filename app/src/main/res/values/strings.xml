@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NeverNote</string>
+    <string name="sort_options_menu">Sort</string>
 </resources>
