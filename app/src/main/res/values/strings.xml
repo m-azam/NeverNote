@@ -12,4 +12,8 @@
     <string name="settings_notifications">Notifications</string>
     <string name="settings_camera">Camera</string>
     <string name="settings_notes">Notes</string>
+    <string name="login_button">Login</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="email_hint">Email ID</string>
+    <string name="password_hint">Password</string>
 </resources>
