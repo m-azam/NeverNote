@@ -1,5 +1,6 @@
 package infrrd.ai.nevernote
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -47,6 +48,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return when (item.itemId) {
             R.id.sort -> {
                 Toast.makeText(this, "sort button is clicked", Toast.LENGTH_SHORT).show()
+                openSettingsActivity()
                 true
             }
             R.id.settings -> {
@@ -72,5 +74,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun openSettingsActivity(){
+        val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
+        startActivity(settingsActivityIntent)
     }
 }
