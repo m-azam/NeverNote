@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/date_text"
+android:layout_width="match_parent"
+android:layout_height="25dp"
+android:background="#FAFAFA"
+android:layout_marginBottom="5dp"
+android:paddingTop="5dp"
+android:textColor="@color/black_semi_transparent"
+android:textSize="14sp"
+    />
