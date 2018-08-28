@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0-rc01'
     implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
     testImplementation("org.jetbrains.spek:spek-api:$spekVersion") {
         exclude group: "org.jetbrains.kotlin"
     }

@@ -52,7 +52,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 true
             }
             R.id.settings -> {
-                Toast.makeText(this, "settings button is clicked", Toast.LENGTH_SHORT).show()
+                openSettingsActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -81,5 +81,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun openSettingsActivity(){
+        val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
+        startActivity(settingsActivityIntent)
     }
 }
