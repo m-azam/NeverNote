@@ -48,11 +48,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return when (item.itemId) {
             R.id.sort -> {
                 Toast.makeText(this, "sort button is clicked", Toast.LENGTH_SHORT).show()
-                openSettingsActivity()
                 true
             }
             R.id.settings -> {
-                Toast.makeText(this, "settings button is clicked", Toast.LENGTH_SHORT).show()
+                openSettingsActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
