@@ -6,6 +6,7 @@ import android.os.Bundle
 import infrrd.ai.nevernote.objects.AppPreferences
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
+import kotlinx.android.synthetic.main.activity_login.signup_button
 
 class LoginActivity : AppCompatActivity() {
 
@@ -14,6 +15,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         login_button.setOnClickListener {
             validateSignIn()
+        }
+        signup_button.setOnClickListener {
+            openSignupScreen()
         }
     }
 
@@ -48,5 +52,10 @@ class LoginActivity : AppCompatActivity() {
             return false
         }
         return true
+    }
+
+    fun openSignupScreen(){
+        val signupActivityIntent = Intent(this, SignupActivity::class.java)
+        startActivity(signupActivityIntent)
     }
 }
