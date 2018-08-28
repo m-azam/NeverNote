@@ -11,4 +11,8 @@
     <string name="signup_button">Sign Up</string>
     <string name="email_hint">Email ID</string>
     <string name="password_hint">Password</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="all_notes">All notes</string>
+    <string name="trash">Trash</string>
+    <string name="completed">Completed</string>
 </resources>

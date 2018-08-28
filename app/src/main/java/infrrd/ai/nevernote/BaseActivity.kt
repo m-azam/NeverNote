@@ -1,5 +1,6 @@
 package infrrd.ai.nevernote
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -9,6 +10,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import infrrd.ai.nevernote.objects.AppPreferences
 import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -67,6 +69,13 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
             R.id.all_notes -> {
                 Toast.makeText(this, "all_notes button clicked", Toast.LENGTH_SHORT).show()
+            }
+            R.id.sign_out -> {
+                AppPreferences.loginValidity = false
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                finish()
             }
 
         }
