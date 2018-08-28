@@ -22,7 +22,10 @@
     <string name="all_notes">All notes</string>
     <string name="trash">Trash</string>
     <string name="completed">Completed</string>
+    <string name="confirm_password_hint">Confirm Password</string>
     <string name="about_header">ABOUT</string>
     <string name="about_support">Support</string>
     <string name="about_legal">Legal</string>
+
+    <string name="welcome">Welcome</string>
 </resources>
