@@ -1,9 +1,8 @@
 package infrrd.ai.nevernote
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+
 import android.support.v7.widget.LinearLayoutManager
 
 import android.support.v7.widget.RecyclerView
@@ -11,7 +10,8 @@ import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : BaseActivity()  {
+
+class MainActivity : BaseActivity() {
     override fun getContentView(): Int {
         return R.layout.activity_main
     }
@@ -103,6 +103,4 @@ class MainActivity : BaseActivity()  {
 
         return notes
     }
-
-
 }
