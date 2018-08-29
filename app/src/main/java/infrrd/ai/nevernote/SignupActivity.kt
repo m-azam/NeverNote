@@ -42,7 +42,7 @@ class SignupActivity : BaseActivity() {
             signup_confirm_password.error = "Field can be left empty"
             returnValue = false
         }
-        if(returnValue) return signup_password.text == signup_confirm_password.text else return false   
+        if(returnValue) return signup_password.text == signup_confirm_password.text else return false
     }
 
     fun validateEmail(): Boolean {
