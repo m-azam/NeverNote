@@ -91,7 +91,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#ababab">
+                    android:background="@color/settings_horizonatal_line">
 
                 </View>
             </LinearLayout>
@@ -239,7 +239,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                    android:background="#ababab">
+                    android:background="@color/settings_horizonatal_line">
 
                 </View>
             </LinearLayout>
