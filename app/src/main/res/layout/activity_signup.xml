@@ -39,13 +39,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.300"
-        android:background="@drawable/signup_editext_background"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/signup_email_icon" />
+            android:layout_height="match_parent" />
 
         <EditText
             android:id="@+id/signup_email_id"
@@ -71,13 +69,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.450"
-        android:background="@drawable/signup_editext_background"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/signup_password_icon" />
+            android:layout_height="match_parent" />
 
         <EditText
             android:id="@+id/signup_password"
@@ -104,13 +100,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.600"
-        android:background="@drawable/signup_editext_background"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/signup_confirm_password_icon" />
+            android:layout_height="match_parent" />
 
         <EditText
             android:id="@+id/signup_confirm_password"

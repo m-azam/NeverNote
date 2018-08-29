@@ -15,4 +15,14 @@
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <!--<style name="Widget.Design.TextInputLayout" parent="AppTheme">-->
+        <!--<item name="hintTextAppearance">@style/AppTheme.TextFloatLabelAppearance</item>-->
+        <!--<item name="colorControlActivated">#fff333</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.TextFloatLabelAppearance" parent="TextAppearance.Design.Hint">-->
+        <!--<item name="android:textColor">@color/login_text_color</item>-->
+    <!--</style>-->
+
 </resources>
