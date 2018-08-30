@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import infrrd.ai.nevernote.objects.AppPreferences
 import kotlinx.android.synthetic.main.base_activity.*
@@ -32,8 +33,23 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     abstract fun getContentView(): Int
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuInflater: MenuInflater = getMenuInflater()
+        val menuInflater: MenuInflater = menuInflater
         menuInflater.inflate(R.menu.options_menu, menu)
+//        val searchActionItem = menu?.findItem(R.id.action_search) as MenuItem
+//        val searchView = searchActionItem.actionView as SearchView
+//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                if(!searchView.isIconified) {
+//                    searchView.isIconified = true
+//                }
+//                searchActionItem.collapseActionView()
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(query: String?): Boolean {
+//                return false
+//            }
+//        })
         return super.onCreateOptionsMenu(menu)
     }
 

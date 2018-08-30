@@ -1,7 +1,6 @@
 package infrrd.ai.nevernote
 
 import android.content.Context
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ActionMode
@@ -11,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
 
-class MyAdapter(private val actionBarCallback: ActionBarCallback, private val displaySelectionCallback: DisplaySelectionCallback, private val context: Context, private val myDataset: MutableList<Note>)
-    : RecyclerView.Adapter<MyAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
+class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val displaySelectionCallback: DisplaySelectionCallback, private val context: Context, private val myDataset: MutableList<Note>)
+    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
 
     var multiSelect: Boolean = false
     var selectCount: Int = 0
@@ -25,7 +24,7 @@ class MyAdapter(private val actionBarCallback: ActionBarCallback, private val di
     }
 
     interface DisplaySelectionCallback {
-        fun displayselection()
+        fun displaySelection()
     }
 
     inner class MyViewHolder(val note: RelativeLayout) : RecyclerView.ViewHolder(note), View.OnLongClickListener, View.OnClickListener {
@@ -37,7 +36,7 @@ class MyAdapter(private val actionBarCallback: ActionBarCallback, private val di
 
         override fun onClick(view: View?) {
             if (multiSelect) {
-                note.checkbox_multiselect.isChecked = !myDataset[adapterPosition].isSelected();
+                note.checkbox_multiselect.isChecked = !myDataset[adapterPosition].isSelected()
                 if (myDataset[adapterPosition].isSelected()) {
                     myDataset[adapterPosition].onDeselect()
                     selectedArray.remove(adapterPosition)
@@ -63,14 +62,13 @@ class MyAdapter(private val actionBarCallback: ActionBarCallback, private val di
                 view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                 selectCount += 1
                 actionBarCallback.startActionBar()
-                displaySelectionCallback.displayselection()
-
+                displaySelectionCallback.displaySelection()
             }
             return true
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesAdapter.MyViewHolder {
         val textView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_cell_layout, parent, false) as RelativeLayout
         return MyViewHolder(textView)
@@ -79,7 +77,7 @@ class MyAdapter(private val actionBarCallback: ActionBarCallback, private val di
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.note.title.text = myDataset[position].title
         holder.note.body.text = myDataset[position].body
-        holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE;
+        holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE
         holder.note.checkbox_multiselect.isChecked = myDataset[position].isSelected()
         if (myDataset[position].isSelected()) {
             holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))

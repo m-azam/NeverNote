@@ -33,4 +33,6 @@
     <string name="or">or</string>
     <string name="untitled_note">Untitled Text</string>
     <string name="alreday_have_an_account">Already have an account?</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
 </resources>
