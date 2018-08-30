@@ -2,6 +2,7 @@ package infrrd.ai.nevernote
 
 import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
+import android.view.ActionMode
 
 import android.support.v7.widget.LinearLayoutManager
 
@@ -11,10 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : BaseActivity() {
-    override fun getContentView(): Int {
-        return R.layout.activity_main
-    }
+class MainActivity : BaseActivity(), MyAdapter.ActionBarCallback, MyAdapter.DisplaySelectionCallback {
+
+    override var actionMode: ActionMode? = null
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var recyclerView: RecyclerView
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity() {
 
         viewManager = LinearLayoutManager(this)
         myDataset = assignNotes()
-        viewAdapter = MyAdapter(myDataset)
+        viewAdapter = MyAdapter(this, this, this, myDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -59,47 +59,66 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun getContentView(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun startActionBar() {
+        actionMode = this.startActionMode(ActionBarCallBack(viewAdapter))
+    }
+
+    override fun finishActionBar() {
+        actionMode?.finish()
+    }
+
+    override fun displayselection() {
+        viewAdapter.multiSelect = true
+        viewAdapter.notifyDataSetChanged()
+    }
+
+
+    //populating the data set here please ignore
     var formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
     fun assignNotes(): MutableList<Note>{
         val notes: MutableList<Note> = ArrayList()
         notes.add(Note("Task1",
-                "Body1",formatter.parse("7-Jun-2013")))
+                "Body1",formatter.parse("7-Jun-2013"), false))
         Log.d("LookHere",notes[0].created.toString())
         notes.add(Note("Task2",
-                "Body2",formatter.parse("7-Jun-2013")))
+                "Body2",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task3",
-                "Body3",formatter.parse("7-Jun-2013")))
+                "Body3",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task4",
-                "Body4",formatter.parse("7-Jun-2013")))
+                "Body4",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task5",
-                "Body5",formatter.parse("7-Jun-2013")))
+                "Body5",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task6",
-                "Body6",formatter.parse("7-Jun-2013")))
+                "Body6",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-Jun-2013")))
+                "Body7",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-Jun-2013")))
+                "Body7",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-Jun-2013")))
+                "Body7",formatter.parse("7-Jun-2013"), false))
         notes.add(Note("Task1",
-                "Body1",formatter.parse("8-Aug-2013")))
+                "Body1",formatter.parse("8-Aug-2013"), false))
         Log.d("LookHere",notes[7].created.toString())
         notes.add(Note("Task2",
-                "Body2",formatter.parse("8-Aug-2013")))
+                "Body2",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task3",
-                "Body3",formatter.parse("8-Aug-2013")))
+                "Body3",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task4",
-                "Body4",formatter.parse("8-Aug-2013")))
+                "Body4",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task5",
-                "Body5",formatter.parse("8-Aug-2013")))
+                "Body5",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task6",
-                "Body6",formatter.parse("8-Aug-2013")))
+                "Body6",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-Aug-2013")))
+                "Body7",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-Aug-2013")))
+                "Body7",formatter.parse("8-Aug-2013"), false))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-Aug-2013")))
+                "Body7",formatter.parse("8-Aug-2013"), false))
 
         return notes
     }

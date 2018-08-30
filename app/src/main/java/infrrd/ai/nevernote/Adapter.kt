@@ -1,46 +1,100 @@
 package infrrd.ai.nevernote
 
-import android.animation.ObjectAnimator
+import android.content.Context
+import android.graphics.Color
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.layout.view.*
+import android.widget.RelativeLayout
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
 
-class MyAdapter(private val myDataset: MutableList<Note>) :
+class MyAdapter(private val actionBarCallback: ActionBarCallback, private val displaySelectionCallback: DisplaySelectionCallback, private val context: Context, private val myDataset: MutableList<Note>)
+    : RecyclerView.Adapter<MyAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
 
-    RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    var multiSelect: Boolean = false
+    var selectCount: Int = 0
+    var selectedArray: ArrayList<Int> = arrayListOf()
 
-        // Provide a reference to the views for each data item
-        // Complex data items may need more than one view per item, and
-        // you provide access to all the views for a data item in a view holder.
-        // Each data item is just a string in this case that is shown in a TextView.
-        class MyViewHolder(val note: LinearLayout) : RecyclerView.ViewHolder(note)
-
-
-        // Create new views (invoked by the layout manager)
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): MyAdapter.MyViewHolder {
-            // create a new view
-            val textView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.layout, parent, false) as LinearLayout
-            // set the view's size, margins, paddings and layout parameters
-            return MyViewHolder(textView)
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
-            holder.note.title.text = myDataset[position].title
-            holder.note.body.text = myDataset[position].body
-
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        override fun getItemCount() = myDataset.size
+    interface ActionBarCallback {
+        var actionMode: ActionMode?
+        fun startActionBar()
+        fun finishActionBar()
     }
+
+    interface DisplaySelectionCallback {
+        fun displayselection()
+    }
+
+    inner class MyViewHolder(val note: RelativeLayout) : RecyclerView.ViewHolder(note), View.OnLongClickListener, View.OnClickListener {
+
+        init {
+            note.setOnLongClickListener(this)
+            note.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+            if (multiSelect) {
+                note.checkbox_multiselect.isChecked = !myDataset[adapterPosition].isSelected();
+                if (myDataset[adapterPosition].isSelected()) {
+                    myDataset[adapterPosition].onDeselect()
+                    selectedArray.remove(adapterPosition)
+                    view?.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
+                    selectCount -= 1
+                    if(selectCount == 0) {
+                        actionBarCallback.finishActionBar()
+                    }
+                } else {
+                    myDataset[adapterPosition].onSelect()
+                    selectedArray.add(adapterPosition)
+                    view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
+                    selectCount += 1
+                }
+            }
+        }
+
+        override fun onLongClick(view: View?): Boolean {
+            if (!multiSelect) {
+                multiSelect = true
+                myDataset[adapterPosition].onSelect()
+                selectedArray.add(adapterPosition)
+                view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
+                selectCount += 1
+                actionBarCallback.startActionBar()
+                displaySelectionCallback.displayselection()
+
+            }
+            return true
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.MyViewHolder {
+        val textView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.recycler_cell_layout, parent, false) as RelativeLayout
+        return MyViewHolder(textView)
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.note.title.text = myDataset[position].title
+        holder.note.body.text = myDataset[position].body
+        holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE;
+        holder.note.checkbox_multiselect.isChecked = myDataset[position].isSelected()
+        if (myDataset[position].isSelected()) {
+            holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
+        } else {
+            holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
+        }
+    }
+
+    override fun getItemCount() = myDataset.size
+
+    override fun onExitSelection() {
+        for(index in selectedArray) {
+            myDataset[index].onDeselect()
+        }
+        notifyDataSetChanged()
+        multiSelect = false
+    }
+}

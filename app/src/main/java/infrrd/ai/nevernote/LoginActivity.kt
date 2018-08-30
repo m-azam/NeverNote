@@ -34,12 +34,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validateUsername(): Boolean {
-        if (email_id.text.isNullOrEmpty())
+        if (email_id.text.toString().isNullOrEmpty())
         {
             email_id.error = "Field can't be left empty"
             return false
         }
-        else if (!Pattern.matches(".+@[a-zA-Z]+\\.com", email_id.text)) {
+        else if (!validateEmail(email_id.text.toString())) {
             email_id.error = "Not a valid email"
             return false
         }
