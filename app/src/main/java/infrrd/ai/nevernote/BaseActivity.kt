@@ -35,21 +35,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater: MenuInflater = menuInflater
         menuInflater.inflate(R.menu.options_menu, menu)
-//        val searchActionItem = menu?.findItem(R.id.action_search) as MenuItem
-//        val searchView = searchActionItem.actionView as SearchView
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                if(!searchView.isIconified) {
-//                    searchView.isIconified = true
-//                }
-//                searchActionItem.collapseActionView()
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(query: String?): Boolean {
-//                return false
-//            }
-//        })
         return super.onCreateOptionsMenu(menu)
     }
 

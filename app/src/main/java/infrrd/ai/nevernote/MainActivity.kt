@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, NotesAdapter.DisplaySelectionCallback {
+class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
     override var actionMode: ActionMode? = null
 
@@ -28,7 +28,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, NotesAdapte
 
         viewManager = LinearLayoutManager(this)
         myDataset = assignNotes()
-        viewAdapter = NotesAdapter(this, this, this, myDataset)
+        viewAdapter = NotesAdapter(this, this, myDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -77,12 +77,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, NotesAdapte
     override fun finishActionBar() {
         actionMode?.finish()
     }
-
-    override fun displaySelection() {
-        viewAdapter.multiSelect = true
-        viewAdapter.notifyDataSetChanged()
-    }
-
 
     //populating the data set here please ignore
     var formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)

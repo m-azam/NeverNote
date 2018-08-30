@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
 
-class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val displaySelectionCallback: DisplaySelectionCallback, private val context: Context, private val myDataset: MutableList<Note>)
+class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
     : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
 
     var multiSelect: Boolean = false
@@ -21,10 +21,6 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
         var actionMode: ActionMode?
         fun startActionBar()
         fun finishActionBar()
-    }
-
-    interface DisplaySelectionCallback {
-        fun displaySelection()
     }
 
     inner class MyViewHolder(val note: RelativeLayout) : RecyclerView.ViewHolder(note), View.OnLongClickListener, View.OnClickListener {
@@ -62,7 +58,8 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
                 view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                 selectCount += 1
                 actionBarCallback.startActionBar()
-                displaySelectionCallback.displaySelection()
+                multiSelect = true
+                notifyDataSetChanged()
             }
             return true
         }
