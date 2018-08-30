@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2dbe60</color>
-    <color name="colorPrimaryDark">#2dbe60</color>
+    <color name="colorPrimary">#4caf50</color>
+    <color name="colorPrimaryDark">#087f23</color>
     <color name="clicked">#228E48</color>
+    <color name="colorPrimaryLight">#80e27e</color>
     <color name="colorAccent">#6bf28f</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="settings_menu">#444</color>
     <color name="black_semi_transparent">#B2000000</color>
+    <color name="gray_semi_transparent">#00FFFFFF</color>
     <color name="about_menu">#444</color>
     <color name="settings_background_on_touch">#eee</color>
     <color name="about_background_on_touch">#eee</color>
+    <color name="theme_light">#FAFAFA</color>
     <color name="login_text_color">#5D616A</color>
     <color name="login_background_color">#2E333B</color>
     <color name="settings_horizonatal_line">#ababab</color>
