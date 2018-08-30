@@ -103,7 +103,7 @@ class NewNote : AppCompatActivity() {
                 Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
                 body = note_body.html
-                var newNote = Note(title,body,Date(System.currentTimeMillis()))
+                var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
                 Log.d(TAG, body)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
