@@ -8,19 +8,17 @@ import android.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : BaseActivity(), MyAdapter.ActionBarCallback, MyAdapter.DisplaySelectionCallback {
+class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
     override var actionMode: ActionMode? = null
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: MyAdapter
+    private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var myDataset: MutableList<Note> = ArrayList()
 
@@ -30,7 +28,7 @@ class MainActivity : BaseActivity(), MyAdapter.ActionBarCallback, MyAdapter.Disp
 
         viewManager = LinearLayoutManager(this)
         myDataset = assignNotes()
-        viewAdapter = MyAdapter(this, this, this, myDataset)
+        viewAdapter = NotesAdapter(this, this, myDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -50,8 +48,6 @@ class MainActivity : BaseActivity(), MyAdapter.ActionBarCallback, MyAdapter.Disp
 
 
     }
-
-
 
     private fun getSectionCallback(notes: List<Note>): RecyclerSectionItemDecoration.SectionCallback {
         return object : RecyclerSectionItemDecoration.SectionCallback {
@@ -81,12 +77,6 @@ class MainActivity : BaseActivity(), MyAdapter.ActionBarCallback, MyAdapter.Disp
     override fun finishActionBar() {
         actionMode?.finish()
     }
-
-    override fun displayselection() {
-        viewAdapter.multiSelect = true
-        viewAdapter.notifyDataSetChanged()
-    }
-
 
     //populating the data set here please ignore
     var formatter = SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
