@@ -4,19 +4,29 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import infrrd.ai.nevernote.objects.AppPreferences
-import kotlinx.android.synthetic.main.activity_login.*
 import java.util.regex.Pattern
-import kotlinx.android.synthetic.main.activity_login.signup_button
+import kotlinx.android.synthetic.main.activity_login.register_button
+import kotlinx.android.synthetic.main.activity_login.login_email_text_input_layout
+import kotlinx.android.synthetic.main.activity_login.login_password_text_input_layout
+import kotlinx.android.synthetic.main.activity_login.login_button
+import kotlinx.android.synthetic.main.activity_login.email_id
+import kotlinx.android.synthetic.main.activity_login.password
 
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        email_id.setOnFocusChangeListener { view, hasFocus ->
+            if(hasFocus) login_email_text_input_layout.error = ""
+        }
+        password.setOnFocusChangeListener { view, hasFocus ->
+            if(hasFocus) login_password_text_input_layout.error = ""
+        }
         login_button.setOnClickListener {
             validateSignIn()
         }
-        signup_button.setOnClickListener {
+        register_button.setOnClickListener {
             openSignupScreen()
         }
     }
@@ -36,11 +46,11 @@ class LoginActivity : AppCompatActivity() {
     private fun validateUsername(): Boolean {
         if (email_id.text.toString().isNullOrEmpty())
         {
-            email_id.error = "Field can't be left empty"
+            login_email_text_input_layout.error = "Field can't be left empty"
             return false
         }
         else if (!validateEmail(email_id.text.toString())) {
-            email_id.error = "Not a valid email"
+            login_email_text_input_layout.error = "Not a valid email"
             return false
         }
         return true
@@ -48,7 +58,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validatePassword(): Boolean {
         if (password.text.isNullOrEmpty()) {
-            password.error = "This field can't be empty"
+            login_password_text_input_layout.error = "This field can't be empty"
             return false
         }
         return true

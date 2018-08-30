@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#087f23</color>
     <color name="clicked">#228E48</color>
     <color name="colorPrimaryLight">#80e27e</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#6bf28f</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="settings_menu">#444</color>
@@ -14,4 +14,7 @@
     <color name="settings_background_on_touch">#eee</color>
     <color name="about_background_on_touch">#eee</color>
     <color name="theme_light">#FAFAFA</color>
+    <color name="login_text_color">#5D616A</color>
+    <color name="login_background_color">#2E333B</color>
+    <color name="settings_horizonatal_line">#ababab</color>
 </resources>
