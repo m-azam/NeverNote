@@ -28,33 +28,50 @@ class RecyclerSectionItemDecoration(val headerHeight:Int,val sticky: Boolean, va
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(c, parent, state)
         if(headerView==null) {
-            headerView = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recycler_section_header,
-                            parent,
-                            false)
-            header = headerView?.date_text
-            fixLayoutSize(headerView as View,parent)
+            initHeader(parent)
         }
 
         var previousHeader: CharSequence = " "
         for (i in 0 until parent.childCount) {
             val child = parent.getChildAt(i)
             val position = parent.getChildAdapterPosition(child)
+            initHeader(parent)
 
             val title = sectionCallback.getSectionHeader(position)
             header?.setText(title)
             if (previousHeader != title || sectionCallback.isSection(position)) {
                 drawHeader(c,
                         child,
-                        headerView as View)
+                        headerView as View,parent,title)
                 previousHeader = title
             }
         }
     }
 
-    private fun drawHeader(c: Canvas, child: View, headerView: View) {
+    fun initHeader(parent: RecyclerView) {
+        headerView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.recycler_section_header,
+                        parent,
+                        false)
+        header = headerView?.date_text
+        fixLayoutSize(headerView as View,parent)
+    }
+
+    private fun drawHeader(c: Canvas, child: View, headerView: View,parent: RecyclerView,title:CharSequence) {
         c.save()
-        c.translate(0f, Math.max(0, child.top - headerView.height).toFloat())
+        c.translate(0f, Math.max(50, child.top - headerView.height).toFloat())
+
+        if(child.top <= 100) {
+            var headerViewTop = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.recycler_section_header_top,
+                            parent,
+                            false)
+            headerViewTop.date_text.text = title
+            fixLayoutSize(headerViewTop as View,parent)
+            headerViewTop.draw(c)
+            c.restore()
+            return
+        }
         headerView.draw(c)
         c.restore()
     }
