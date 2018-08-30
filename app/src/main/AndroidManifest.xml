@@ -21,7 +21,10 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".SignupActivity" android:label="@string/title_activity_settings"/>
+
+        <activity android:name=".NewNote"/>
+
     </application>
 
 </manifest>

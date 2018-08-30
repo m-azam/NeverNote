@@ -17,4 +17,6 @@
     <color name="login_text_color">#5D616A</color>
     <color name="login_background_color">#2E333B</color>
     <color name="settings_horizonatal_line">#ababab</color>
+    <color name="grey">#666666</color>
+
 </resources>
