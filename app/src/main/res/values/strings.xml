@@ -26,8 +26,11 @@
     <string name="about_header">ABOUT</string>
     <string name="about_support">Support</string>
     <string name="about_legal">Legal</string>
+    <string name="delete">Delete</string>
     <string name="welcome">Welcome</string>
     <string name="register_button">Register</string>
     <string name="no_account_text">DON\'T HAVE AN ACCOUNT</string>
     <string name="or">or</string>
+    <string name="untitled_note">Untitled Text</string>
+    <string name="alreday_have_an_account">Already have an account?</string>
 </resources>

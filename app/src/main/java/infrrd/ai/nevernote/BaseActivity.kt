@@ -83,6 +83,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return true
     }
 
+
+
     private fun openSettingsActivity(){
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)

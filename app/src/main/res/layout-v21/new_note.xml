@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/new_note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:elevation="4dp"
+        />
+
+    <EditText
+        android:id="@+id/note_title"
+        android:layout_width="match_parent"
+        android:layout_marginTop="50dp"
+        android:hint="Note Title"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"/>
+    <View
+        android:layout_width="match_parent"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintLeft_toLeftOf="@id/title"
+        app:layout_constraintRight_toRightOf="@id/title"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:id="@+id/line"
+        app:layout_constraintTop_toBottomOf="@id/note_title"
+        android:background="@color/black_semi_transparent"
+        />
+    <TextView
+        android:id="@+id/note_body_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toBottomOf="@id/line"
+        android:background="@android:color/transparent"
+        android:hint="What's on your mind?"
+        android:textSize="18sp"
+        />
+
+    <jp.wasabeef.richeditor.RichEditor
+        android:id="@+id/note_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintTop_toBottomOf="@id/line"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorPrimary"/>
+
+    <HorizontalScrollView
+        android:id = "@+id/text_format_options"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#666666"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageButton
+                android:id="@+id/action_bold"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@null"
+                android:src="@drawable/bold"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:selectableItemBackgroundBorderless"
+                />
+
+            <ImageButton
+                android:id="@+id/action_italic"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/italic"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+
+            <ImageButton
+                android:id="@+id/action_strikethrough"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/strike"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_underline"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@null"
+                android:src="@drawable/underline"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:selectableItemBackgroundBorderless"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_highlight"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/text_highlight"
+                android:padding="15dp"
+                android:clickable="true"
+                />
+
+            <ImageButton
+                android:id="@+id/action_indent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/indent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_outdent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/outdent"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_align_left"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/justify_left"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_align_center"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/justify_center"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+            <ImageButton
+                android:id="@+id/action_align_right"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/justify_right"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+
+                />
+
+
+            <ImageButton
+                android:id="@+id/action_insert_numbers"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/numbers"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                />
+
+            <ImageButton
+                android:id="@+id/action_insert_bullets"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/bullets"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:padding="15dp"
+                android:clickable="true"
+                android:focusable="true"
+                />
+
+            <ImageButton
+                android:id="@+id/action_insert_checkbox"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:src="@drawable/white_check_box"
+                android:padding="15dp"
+                android:clickable="true"
+                />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</android.support.constraint.ConstraintLayout>
