@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import infrrd.ai.nevernote.objects.AppPreferences
 import kotlinx.android.synthetic.main.base_activity.*
@@ -32,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     abstract fun getContentView(): Int
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuInflater: MenuInflater = getMenuInflater()
+        val menuInflater: MenuInflater = menuInflater
         menuInflater.inflate(R.menu.options_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }

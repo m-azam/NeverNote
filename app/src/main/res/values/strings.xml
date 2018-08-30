@@ -9,7 +9,7 @@
     <string name="action_settings">Settings</string>
     <string name="settings_user_name">User Name</string>
     <string name="title_activity_settings">Settings Activity</string>
-    <string name="settings_header">SETTINGS</string>
+    <string name="settings_header">Settings</string>
     <string name="settings_account_info">Account Info</string>
     <string name="settings_notifications">Notifications</string>
     <string name="settings_camera">Camera</string>
@@ -23,7 +23,7 @@
     <string name="trash">Trash</string>
     <string name="completed">Completed</string>
     <string name="confirm_password_hint">Confirm Password</string>
-    <string name="about_header">ABOUT</string>
+    <string name="about_header">About</string>
     <string name="about_support">Support</string>
     <string name="about_legal">Legal</string>
     <string name="delete">Delete</string>
@@ -32,5 +32,7 @@
     <string name="no_account_text">DON\'T HAVE AN ACCOUNT</string>
     <string name="or">or</string>
     <string name="untitled_note">Untitled Text</string>
-
+    <string name="alreday_have_an_account">Already have an account?</string>
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
 </resources>

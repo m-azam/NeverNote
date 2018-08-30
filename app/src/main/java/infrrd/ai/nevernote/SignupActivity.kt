@@ -1,12 +1,16 @@
 package infrrd.ai.nevernote
 
-import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_signup.signup_email_id
+import android.support.design.widget.TextInputEditText
+import android.support.design.widget.TextInputLayout
+import kotlinx.android.synthetic.main.activity_signup.signup_email_id_text_input_layout
+import kotlinx.android.synthetic.main.activity_signup.signup_email_id_text_input
+import kotlinx.android.synthetic.main.activity_signup.signup_password_text_input_layout
+import kotlinx.android.synthetic.main.activity_signup.signup_password_text_input
+import kotlinx.android.synthetic.main.activity_signup.signup_confirm_password_text_input_layout
+import kotlinx.android.synthetic.main.activity_signup.signup_confirm_password_text_input
 import kotlinx.android.synthetic.main.activity_signup.signup_button
-import kotlinx.android.synthetic.main.activity_signup.signup_password
-import kotlinx.android.synthetic.main.activity_signup.signup_confirm_password
+import kotlinx.android.synthetic.main.activity_signup.close_signup_screen
 import java.util.regex.Pattern
 
 class SignupActivity : BaseActivity() {
@@ -14,6 +18,14 @@ class SignupActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+        close_signup_screen.setOnClickListener {
+            goToLoginScreen()
+        }
+
+        textInputOnFocusChangeListener(signup_email_id_text_input_layout, signup_email_id_text_input, this::validateEmail)
+        textInputOnFocusChangeListener(signup_password_text_input_layout, signup_password_text_input, this::confirmPassword)
+        textInputOnFocusChangeListener(signup_confirm_password_text_input_layout, signup_confirm_password_text_input, this::confirmPassword)
+
         signup_button.setOnClickListener {
             var emailValidatorFlag = confirmPassword()
             var passwordValidatorFlag = validateEmail()
@@ -34,26 +46,42 @@ class SignupActivity : BaseActivity() {
 
     fun confirmPassword(): Boolean {
         var returnValue = true;
-        if(signup_password.text.isNullOrEmpty()) {
-            signup_password.error = "Field can't be left empty"
+        if(signup_password_text_input.text.isNullOrEmpty()) {
+            signup_password_text_input_layout.isErrorEnabled = true
+            signup_password_text_input_layout.error = "Field can't be left empty"
             returnValue = false
         }
-        if(signup_confirm_password.text.isNullOrEmpty()) {
-            signup_confirm_password.error = "Field can be left empty"
+        if(signup_confirm_password_text_input.text.isNullOrEmpty()) {
+            signup_confirm_password_text_input_layout.isErrorEnabled = true
+            signup_confirm_password_text_input_layout.error = "Field can be left empty"
             returnValue = false
         }
-        if(returnValue) return signup_password.text == signup_confirm_password.text else return false
+        if(returnValue) return signup_password_text_input.text == signup_confirm_password_text_input.text else return false
     }
 
     fun validateEmail(): Boolean {
-        if (signup_email_id.text.isNullOrEmpty()) {
-            signup_email_id.error = "Field can't be left empty"
+        if (signup_email_id_text_input.text.isNullOrEmpty()) {
+            signup_email_id_text_input_layout.isErrorEnabled = true
+            signup_email_id_text_input_layout.error = "Field can't be left empty"
             return false
         }
-        else if (!Pattern.matches(".+@[a-zA-Z]+\\.com", signup_email_id.text)) {
-            signup_email_id.error = "Not a valid email"
+        else if (!Pattern.matches(".+@[a-zA-Z]+\\.com", signup_email_id_text_input.text)) {
+            signup_email_id_text_input_layout.isErrorEnabled = true
+            signup_email_id_text_input_layout.error = "Not a valid email"
             return false
         }
         return true
     }
+    
+    fun textInputOnFocusChangeListener(textInputLayout: TextInputLayout, textInputEditText: TextInputEditText, callback: () -> Boolean){
+        textInputEditText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                textInputLayout.error = null
+                textInputLayout.isErrorEnabled = false
+            }
+            else
+                callback()
+        }
+    }
+
 }
