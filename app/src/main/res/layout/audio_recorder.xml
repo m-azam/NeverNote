@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recorder"
+        android:layout_centerInParent="true"
+        android:src="@drawable/mic_icon"
+        />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/recorder"
+        android:id="@+id/player"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_icon"
+            android:id="@+id/play_pause"
+            android:background="@android:color/transparent"
+            />
+        <android.support.v7.widget.AppCompatSeekBar
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:max = "100"
+            android:progress="1"
+            android:layout_marginTop="10dp"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/playerStop"
+            android:src="@drawable/stop_icon"
+            android:background="@android:color/transparent"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
