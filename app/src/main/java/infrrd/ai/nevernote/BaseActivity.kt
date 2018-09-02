@@ -56,6 +56,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 openSettingsActivity()
                 true
             }
+            R.id.notes_map_view -> {
+                openMapViewActivity()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -85,9 +89,14 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
 
-
     private fun openSettingsActivity(){
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)
+    }
+
+    private fun openMapViewActivity(){
+        Toast.makeText(this, "open map view activity function called", Toast.LENGTH_SHORT).show()
+        val mapViewActivityIntent = Intent(this, MapViewActivity::class.java)
+        startActivity(mapViewActivityIntent)
     }
 }
