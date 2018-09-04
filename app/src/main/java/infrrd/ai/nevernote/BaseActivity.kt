@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_activity)
@@ -95,8 +94,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
     private fun openMapViewActivity(){
-        Toast.makeText(this, "open map view activity function called", Toast.LENGTH_SHORT).show()
-        val mapViewActivityIntent = Intent(this, MapViewActivity::class.java)
+        val mapViewActivityIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapViewActivityIntent)
     }
 }

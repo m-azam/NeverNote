@@ -35,6 +35,6 @@
     <string name="alreday_have_an_account">Already have an account?</string>
     <string name="search">Search</string>
     <string name="settings">Settings</string>
-    <string name="map_view">Map View</string>
-    <string name="title_activity_map_view">MapViewActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="map_view">Map</string>
 </resources>

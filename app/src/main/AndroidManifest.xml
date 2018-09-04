@@ -28,16 +28,14 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".NewNote" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <activity
-            android:name=".MapViewActivity"
-            android:label="@string/title_activity_map_view"></activity>
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_maps" />
     </application>
-
-    <meta-data android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBo7RaLx5JZXDTxNhNyQ4C6yW41nvd4Ecw"/>
-
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true"/>
 
 </manifest>
