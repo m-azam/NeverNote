@@ -1,6 +1,7 @@
 package infrrd.ai.nevernote
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.media.MediaRecorder
@@ -11,6 +12,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import kotlinx.android.synthetic.main.audio_recorder.*
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
@@ -56,21 +59,23 @@ class AudioRecorder : AppCompatActivity() {
     }
 
     private fun startPlaying() {
+        val directory = getDir("nevernote.audio", Context.MODE_PRIVATE)
         mediaPlayer = MediaPlayer().apply {
             try {
                 setDataSource(fileName)
                 prepare()
                 start()
                 this?.setOnCompletionListener {
-                    Log.d("lookie","inside done")
                     play_pause.performClick()
                 }
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "prepare() failed")
+                play_pause.performClick()
             }
         }
 
     }
+
 
     private fun stopPlaying() {
         mediaPlayer?.release()
@@ -78,7 +83,7 @@ class AudioRecorder : AppCompatActivity() {
         player.visibility = View.GONE
     }
 
-    private fun pausePlaying(){
+    private fun pausePlaying() {
         mediaPlayer?.pause()
     }
 
@@ -95,25 +100,29 @@ class AudioRecorder : AppCompatActivity() {
             }
 
             start()
+            recording.start()
+            recording.loading()
+            recording.setVolume(200f)
         }
         player.visibility = View.GONE
     }
 
     private fun stopRecording() {
+        val directory = getDir("nevernote.audio", Context.MODE_PRIVATE)
+        File(directory,fileName)
         mediaRecorder?.apply {
             stop()
             release()
         }
         player.visibility = View.VISIBLE
         mediaRecorder = null
+        recording.stop()
     }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        fileName = "${externalCacheDir.absolutePath}/audiorecordtest.3gp"
-
+        val directory = getDir("nevernote.audio", Context.MODE_PRIVATE)
+        fileName = "${directory.absolutePath}/audiorecordtest.3gp"
         super.onCreate(savedInstanceState)
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
@@ -137,7 +146,6 @@ class AudioRecorder : AppCompatActivity() {
         play_pause.setOnClickListener(object : View.OnClickListener {
             var startPlaying = true
             override fun onClick(view: View) {
-
                 if(startPlaying) {
                     onPlay(startPlaying)
                     (view as ImageButton).setImageResource(R.drawable.pause_icon)

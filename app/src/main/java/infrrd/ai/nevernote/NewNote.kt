@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class NewNote : AppCompatActivity() {
+class NewNote: AppCompatActivity() {
     private val TAG = NewNote::class.java.simpleName
     var textOptionsVisible: Boolean = false
     lateinit var menu:Menu
@@ -71,8 +71,6 @@ class NewNote : AppCompatActivity() {
         note_body.setTextBackgroundColor(R.color.theme_light)
     }
 
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
         val inflater = menuInflater
@@ -80,21 +78,16 @@ class NewNote : AppCompatActivity() {
         this.menu = menu
         return true
     }
-
-
-    @SuppressLint("SimpleDateFormat")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.save -> {
                 var title : String
                 var body: String?
-                if(note_title.text.toString().isNullOrEmpty() && note_body.html.isNullOrBlank()){
+                if(note_title.text.toString().isNullOrEmpty() && note_body.html.isNullOrBlank()) {
                     Toast.makeText(this,"Cannot save empty note",Toast.LENGTH_SHORT).show()
-
                 }
-                else{
-                    if(note_title.text.toString().isEmpty())
-                    {
+                else {
+                    if(note_title.text.toString().isEmpty()) {
                         note_title.setText(R.string.untitled_note)
                         title = "Untitled Note"
                     }
@@ -106,8 +99,10 @@ class NewNote : AppCompatActivity() {
                     body = note_body.html
 
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("result",newNote)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
                 }
 
                 true
@@ -120,6 +115,7 @@ class NewNote : AppCompatActivity() {
                 note_body.undo()
                 true
             }
+
             R.id.text_format -> {
                 if(textOptionsVisible) {
                     textOptionsVisible = false
@@ -127,7 +123,7 @@ class NewNote : AppCompatActivity() {
                     item.setIcon(R.drawable.text_format_icon_deselected)
 
                 }
-                else if(note_body.isFocused){
+                else if(note_body.isFocused) {
                     textOptionsVisible = true
                     text_format_options.visibility = View.VISIBLE
                     item.setIcon(R.drawable.text_format_icon)
@@ -137,6 +133,7 @@ class NewNote : AppCompatActivity() {
         }
         var dateFormat: DateFormat = SimpleDateFormat("yyyy/MMM/dd")
         var date =  Date()
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -183,9 +180,8 @@ class NewNote : AppCompatActivity() {
         action_insert_checkbox.setOnClickListener {
             note_body.insertTodo()
         }
-
-
     }
+
 
     fun onClickBold() {
 
@@ -201,7 +197,6 @@ class NewNote : AppCompatActivity() {
                 isBold = !isBold
             }
         })
-
     }
 
     fun onClickItalic() {
@@ -220,8 +215,6 @@ class NewNote : AppCompatActivity() {
                 isItalic = !isItalic
             }
         })
-
-
     }
 
     fun onClickUnderline() {
@@ -240,12 +233,9 @@ class NewNote : AppCompatActivity() {
                 isStrike = !isStrike
             }
         })
-
     }
 
-
-
-    fun onClickStrike(){
+    fun onClickStrike() {
 
         action_underline.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
@@ -260,7 +250,6 @@ class NewNote : AppCompatActivity() {
                 isUnderline = !isUnderline
             }
         })
-
     }
 
     fun onClickHighlight() {
@@ -276,6 +265,7 @@ class NewNote : AppCompatActivity() {
                 isChanged = !isChanged
             }
         })
-
     }
 }
+
+

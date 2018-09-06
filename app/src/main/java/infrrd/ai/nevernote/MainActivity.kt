@@ -1,12 +1,14 @@
 package infrrd.ai.nevernote
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
-import android.support.v4.widget.DrawerLayout
+import android.provider.MediaStore
 import android.view.ActionMode
-
 import android.support.v7.widget.LinearLayoutManager
-
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +17,12 @@ import java.text.Format
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
+import android.os.Environment.getExternalStorageDirectory
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
+import android.widget.Toast
+import java.io.File
 
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
@@ -25,6 +33,8 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var myDataset: MutableList<Note> = ArrayList()
+    private lateinit var imageUri: Uri
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -39,22 +49,64 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
             adapter = viewAdapter
 
         }
+
         val sectionItemDecoration = RecyclerSectionItemDecoration(100,
                 true,
                 getSectionCallback(myDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
 
         text.setOnClickListener{
-
             val intent = Intent(this, NewNote::class.java)
-            startActivity(intent)
+            startActivityForResult(intent,2)
         }
-
         audio.setOnClickListener {
             val intent = Intent(this, AudioRecorder::class.java)
-            startActivity(intent)
+            startActivity(intent)}
+        camera.setOnClickListener {
+            takePicture()
         }
 
+    }
+
+
+    private fun takePicture() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1)
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            val photo = File(getExternalStorageDirectory(), "Pic.jpg")
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                    FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo))
+            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo)
+            startActivityForResult(intent, 1)
+        }
+        else {
+            Toast.makeText(this, "Please provide camera access", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            1 -> {
+                if (resultCode == Activity.RESULT_OK ) {
+                    val capturedImage = imageUri
+                    contentResolver.notifyChange(capturedImage, null)
+
+                    Toast.makeText(this, capturedImage.toString(), Toast.LENGTH_LONG).show()
+                }
+            }
+            2 -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d("LOOK HERE", data?.getStringExtra("result"))
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    //Write your code if there's no result
+                }
+            }
+        }
     }
 
     private fun getSectionCallback(notes: List<Note>): RecyclerSectionItemDecoration.SectionCallback {
@@ -87,8 +139,10 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
         actionMode?.finish()
     }
 
+
+
     var formatter = SimpleDateFormat("dd-MMMM-yyyy")
-    fun assignNotes(): MutableList<Note>{
+    fun assignNotes(): MutableList<Note> {
 
         val notes: MutableList<Note> = ArrayList()
         notes.add(Note("Task1",

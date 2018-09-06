@@ -44,5 +44,11 @@
             android:background="@android:color/transparent"
             />
     </LinearLayout>
+    <com.haozhang.lib.AnimatedRecordingView
+        android:id="@+id/recording"
+        android:layout_width="match_parent"
+        android:layout_height="200px"
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>
