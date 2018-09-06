@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.haozhang.libary:android-animated-recording-view:1.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
+
     testImplementation("org.jetbrains.spek:spek-api:$spekVersion") {
         exclude group: "org.jetbrains.kotlin"
     }
