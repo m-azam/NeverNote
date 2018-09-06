@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class NewNote : AppCompatActivity() {
+class NewNote: AppCompatActivity() {
     private val TAG = NewNote::class.java.simpleName
     var textOptionsVisible: Boolean = false
     lateinit var menu:Menu
@@ -79,8 +79,6 @@ class NewNote : AppCompatActivity() {
         note_body.setTextBackgroundColor(R.color.theme_light)
     }
 
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
         val inflater = menuInflater
@@ -88,33 +86,33 @@ class NewNote : AppCompatActivity() {
         this.menu = menu
         return true
     }
-
-
-    @SuppressLint("SimpleDateFormat")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.save -> {
                 var title : String
-                var body: String
-                if(note_title.text.toString().isEmpty() && note_body.toString().isEmpty()){
+                var body: String?
+                if(note_title.text.toString().isNullOrEmpty() && note_body.html.isNullOrBlank()) {
                     Toast.makeText(this,"Cannot save empty note",Toast.LENGTH_SHORT).show()
-
-                }
-                if(note_title.text.toString().isEmpty())
-                {
-                    note_title.setText(R.string.untitled_note)
-                    title = "Untitled Note"
                 }
                 else {
-                    title = note_title.text.toString()
-                }
-                Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
+                    if(note_title.text.toString().isEmpty()) {
+                        note_title.setText(R.string.untitled_note)
+                        title = "Untitled Note"
+                    }
+                    else {
+                        title = note_title.text.toString()
+                    }
+                    Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
-                body = note_body.html
-                var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
-                Log.d(TAG, body)
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                    body = note_body.html
+
+                    var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("result","xtf")
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
+
                 true
             }
             R.id.redo_text -> {
@@ -125,6 +123,7 @@ class NewNote : AppCompatActivity() {
                 note_body.undo()
                 true
             }
+
             R.id.text_format -> {
                 if(textOptionsVisible) {
                     textOptionsVisible = false
@@ -132,24 +131,21 @@ class NewNote : AppCompatActivity() {
                     item.setIcon(R.drawable.text_format_icon_deselected)
 
                 }
-                else if(note_body.isFocused){
+                else if(note_body.isFocused) {
                     textOptionsVisible = true
                     text_format_options.visibility = View.VISIBLE
                     item.setIcon(R.drawable.text_format_icon)
                 }
-
             }
             else -> super.onOptionsItemSelected(item)
         }
         var dateFormat: DateFormat = SimpleDateFormat("yyyy/MMM/dd")
         var date =  Date()
-        return super.onOptionsItemSelected(item)
 
+        return super.onOptionsItemSelected(item)
     }
 
     fun initTextFormatListners() {
-
-
 
         onClickBold()
 
@@ -192,8 +188,6 @@ class NewNote : AppCompatActivity() {
         action_insert_checkbox.setOnClickListener {
             note_body.insertTodo()
         }
-
-
     }
 
 
@@ -211,7 +205,6 @@ class NewNote : AppCompatActivity() {
                 isBold = !isBold
             }
         })
-
     }
 
     fun onClickItalic() {
@@ -230,8 +223,6 @@ class NewNote : AppCompatActivity() {
                 isItalic = !isItalic
             }
         })
-
-
     }
 
     fun onClickUnderline() {
@@ -250,9 +241,9 @@ class NewNote : AppCompatActivity() {
                 isStrike = !isStrike
             }
         })
-
     }
-    fun onClickStrike(){
+
+    fun onClickStrike() {
 
         action_underline.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
@@ -267,7 +258,6 @@ class NewNote : AppCompatActivity() {
                 isUnderline = !isUnderline
             }
         })
-
     }
 
     fun onClickHighlight() {
@@ -283,7 +273,6 @@ class NewNote : AppCompatActivity() {
                 isChanged = !isChanged
             }
         })
-
     }
 
     fun getLocation(){
@@ -323,3 +312,4 @@ class NewNote : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), MY_PERMISSION_REQUEST_LOCATION)
     }
 }
+
