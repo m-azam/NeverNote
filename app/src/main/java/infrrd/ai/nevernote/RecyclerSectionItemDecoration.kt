@@ -1,5 +1,6 @@
 package infrrd.ai.nevernote
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
@@ -57,15 +58,16 @@ class RecyclerSectionItemDecoration(val headerHeight:Int,val sticky: Boolean, va
         fixLayoutSize(headerView as View,parent)
     }
 
-    private fun drawHeader(c: Canvas, child: View, headerView: View,parent: RecyclerView,title:CharSequence) {
+    private fun drawHeader(c: Canvas, child: View, headerView: View, parent: RecyclerView, title:CharSequence) {
         c.save()
-        c.translate(0f, Math.max(50, child.top - headerView.height).toFloat())
+        c.translate(0f, Math.max(35, child.top - 65).toFloat())
 
         if(child.top <= 100) {
             var headerViewTop = LayoutInflater.from(parent.context)
                     .inflate(R.layout.recycler_section_header_top,
                             parent,
                             false)
+
             headerViewTop.date_text.text = title
             fixLayoutSize(headerViewTop as View,parent)
             headerViewTop.draw(c)
@@ -75,7 +77,6 @@ class RecyclerSectionItemDecoration(val headerHeight:Int,val sticky: Boolean, va
         headerView.draw(c)
         c.restore()
     }
-
 
     private fun fixLayoutSize(view: View, parent: ViewGroup) {
         val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.width,
