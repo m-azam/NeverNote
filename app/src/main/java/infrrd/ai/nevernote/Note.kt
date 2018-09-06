@@ -1,11 +1,7 @@
 package infrrd.ai.nevernote
 
-import android.os.Parcelable
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
-import android.os.Parcel
 
+import java.util.*
 
 
 class Note(val title:String,val body:String,val created: Date, var selected: Boolean){
@@ -22,5 +18,5 @@ class Note(val title:String,val body:String,val created: Date, var selected: Boo
     fun onDeselect() {
         selected = false
     }
-    
+
 }

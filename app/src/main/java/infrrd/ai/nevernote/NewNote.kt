@@ -1,12 +1,16 @@
 package infrrd.ai.nevernote
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActionBar
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +19,8 @@ import android.view.*
 import android.widget.ImageButton
 import android.widget.Toast
 import com.google.gson.Gson
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import jp.wasabeef.richeditor.RichEditor
 import kotlinx.android.synthetic.main.new_note.*
 import kotlinx.android.synthetic.main.new_note.view.*
@@ -27,10 +33,14 @@ class NewNote: AppCompatActivity() {
     private val TAG = NewNote::class.java.simpleName
     var textOptionsVisible: Boolean = false
     lateinit var menu:Menu
-    private var isBold: Boolean = false
-    private var isItalic: Boolean = false
-    private var isUnderline: Boolean = false
-    private var isStrike: Boolean = false
+    var isBold: Boolean = false
+    var isItalic: Boolean = false
+    var isUnderline: Boolean = false
+    var isStrike: Boolean = false
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var latitiude:Double? = 0.0
+    private var longitude:Double? = 0.0
+    private val MY_PERMISSION_REQUEST_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -43,6 +53,8 @@ class NewNote: AppCompatActivity() {
         note_body.setEditorFontSize(18)
         note_body.setEditorFontColor(Color.BLACK)
         initTextFormatListners()
+
+        getLocation()
 
         note_body_hint.setOnClickListener {
             Log.d(TAG,"inside note_body hint")
@@ -57,10 +69,6 @@ class NewNote: AppCompatActivity() {
             else {
                 note_body_hint.visibility  = View.GONE
             }
-//            if(it.length>4 && it.subSequence(it.length-2,it.length) == "b>" && !isBold) {
-//                action_bold.setImageResource(R.drawable.bold_selected)
-//                isBold = !isBold
-//            }
         }
         note_body.setOnFocusChangeListener { v, hasFocus ->
             if(!hasFocus) {
@@ -101,7 +109,11 @@ class NewNote: AppCompatActivity() {
                     var gson = Gson()
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
                     val returnIntent = Intent()
+<<<<<<< HEAD
                     returnIntent.putExtra("result",gson.toJson(newNote))
+=======
+                    returnIntent.putExtra("result","xtf")
+>>>>>>> eb376cd0202d892a1baae0390f98bd0364fada96
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }
@@ -267,6 +279,42 @@ class NewNote: AppCompatActivity() {
             }
         })
     }
-}
 
+    fun getLocation(){
+        Toast.makeText(this, "get lcoation called", Toast.LENGTH_SHORT).show()
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+//            permission is not granted
+//            should an explanation be shown
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                Toast.makeText(this, "Location is requred", Toast.LENGTH_SHORT).show()
+                requestLocationAccess()
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
+                    this.latitiude = location?.latitude
+                    this.longitude = location?.longitude
+                }
+            }
+//            no need for explanation
+            else{
+                requestLocationAccess()
+                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
+                    this.latitiude = location?.latitude
+                    this.longitude = location?.longitude
+                }
+            }
+        }
+        else{
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
+                this.latitiude = location?.latitude
+                this.longitude = location?.longitude
+            }
+        }
+    }
+
+    fun requestLocationAccess(){
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), MY_PERMISSION_REQUEST_LOCATION)
+    }
+}
 
