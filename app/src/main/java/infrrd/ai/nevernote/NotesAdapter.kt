@@ -7,11 +7,13 @@ import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
 
 class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
-    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
+    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener, Filterable {
 
     var multiSelect: Boolean = false
     var selectCount: Int = 0
@@ -80,6 +82,18 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
             holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
         } else {
             holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
+        }
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(filterCharSequence: CharSequence?): FilterResults {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun publishResults(filterCharSequence: CharSequence?, filterResults: FilterResults?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
         }
     }
 
