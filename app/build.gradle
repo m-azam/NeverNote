@@ -41,6 +41,8 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'jp.wasabeef:richeditor-android:1.2.2'
     implementation 'org.jsoup:jsoup:1.10.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.haozhang.libary:android-animated-recording-view:1.0'
     testImplementation("org.jetbrains.spek:spek-api:$spekVersion") {
         exclude group: "org.jetbrains.kotlin"

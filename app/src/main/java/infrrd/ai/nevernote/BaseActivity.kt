@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_activity)
@@ -57,6 +56,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 openSettingsActivity()
                 true
             }
+            R.id.notes_map_view -> {
+                openMapViewActivity()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -86,9 +89,13 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
 
-
     private fun openSettingsActivity(){
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)
+    }
+
+    private fun openMapViewActivity(){
+        val mapViewActivityIntent = Intent(this, MapsActivity::class.java)
+        startActivity(mapViewActivityIntent)
     }
 }
