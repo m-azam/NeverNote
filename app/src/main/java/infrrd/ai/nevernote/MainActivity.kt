@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import android.os.Environment.getExternalStorageDirectory
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
@@ -25,6 +26,9 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+
+
 
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
@@ -36,6 +40,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var notesDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
+    private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,21 +76,40 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
 
     private fun takePicture() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1)
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val photo = File(getExternalStorageDirectory(), "Pic.jpg")
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo))
-            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo)
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", this.packageName, null)
+            intent.data = uri
             startActivityForResult(intent, 1)
         }
         else {
-            Toast.makeText(this, "Please provide camera access", Toast.LENGTH_LONG).show()
+            if (checkPermissions()) {
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                val photo = File(getExternalStorageDirectory(), "Pic.jpg")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        FileProvider.getUriForFile(this,
+                                BuildConfig.APPLICATION_ID + ".provider", photo))
+                imageUri = FileProvider.getUriForFile(this,
+                        BuildConfig.APPLICATION_ID + ".provider", photo)
+                startActivityForResult(intent, 1)
+            } else {
+                getPermission()
+            }
         }
+    }
+
+    private fun checkPermissions(): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun getPermission() {
+        ActivityCompat.requestPermissions(this, permissions, 1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
