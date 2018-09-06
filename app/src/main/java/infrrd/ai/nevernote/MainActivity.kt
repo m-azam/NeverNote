@@ -122,14 +122,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
                     Toast.makeText(this, capturedImage.toString(), Toast.LENGTH_LONG).show()
                 }
             }
-            2 -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.d("LOOK HERE", data?.getStringExtra("result"))
-                }
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    //Write your code if there's no result
-                }
-            }
         }
     }
 
