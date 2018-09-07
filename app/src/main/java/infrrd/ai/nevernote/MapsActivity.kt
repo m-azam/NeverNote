@@ -12,8 +12,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import android.widget.Toast
 
-class MapsActivity : BaseActivity(), OnMapReadyCallback {
+
+
+class MapsActivity() : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var mMap: GoogleMap
 
@@ -29,10 +32,8 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.addMarker(MarkerOptions().position(LatLng(34.4545, 56.5756)).title("marker 2").snippet("i am here"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        addMarkerForMap(mMap, 34.4343, 45.434, "Marker in sydney", "This is sydney")
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(34.4343, 45.434)))
     }
 
     override fun getContentView(): Int {
@@ -42,5 +43,14 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if(menu != null) menu.findItem(R.id.notes_map_view).setVisible(false)
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        Toast.makeText(this, "Info window clicked",
+                Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addMarkerForMap(mMap:GoogleMap, latitude:Double, longitude:Double, title:String, snippet:String){
+        mMap.addMarker(MarkerOptions().position(LatLng(latitude, longitude)).title(title).snippet(snippet))
     }
 }
