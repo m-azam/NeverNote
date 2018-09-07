@@ -18,6 +18,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.Toast
+import com.google.gson.Gson
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import jp.wasabeef.richeditor.RichEditor
@@ -105,10 +106,10 @@ class NewNote: AppCompatActivity() {
                     Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
                     body = note_body.html
-
+                    var gson = Gson()
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
                     val returnIntent = Intent()
-                    returnIntent.putExtra("result","xtf")
+                    returnIntent.putExtra("result",gson.toJson(newNote))
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }

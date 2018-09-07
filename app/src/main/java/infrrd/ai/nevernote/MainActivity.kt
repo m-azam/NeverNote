@@ -23,6 +23,8 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 
@@ -36,7 +38,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private var myDataset: MutableList<Note> = ArrayList()
+    private var notesDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
@@ -46,8 +48,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
         super.onCreate(savedInstanceState)
 
         viewManager = LinearLayoutManager(this)
-        myDataset = assignNotes()
-        viewAdapter = NotesAdapter(this, this, myDataset)
+        viewAdapter = NotesAdapter(this, this, notesDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -57,7 +58,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
         val sectionItemDecoration = RecyclerSectionItemDecoration(100,
                 true,
-                getSectionCallback(myDataset))
+                getSectionCallback(notesDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
 
         text.setOnClickListener{
@@ -76,7 +77,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
     private fun takePicture() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])
-                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[1])) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri = Uri.fromParts("package", this.packageName, null)
             intent.data = uri
@@ -122,6 +123,19 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
                     Toast.makeText(this, capturedImage.toString(), Toast.LENGTH_LONG).show()
                 }
             }
+            2 -> {
+
+                if (resultCode == Activity.RESULT_OK) {
+                    var gson = Gson()
+                    var new_note: Note = gson.fromJson(data?.getStringExtra("result"),
+                            object : TypeToken<Note>(){}.type)
+                    notesDataset.add(0,new_note)
+                    viewAdapter.notifyItemInserted(0)
+
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                }
+            }
         }
     }
 
@@ -155,49 +169,4 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
         actionMode?.finish()
     }
 
-
-
-    var formatter = SimpleDateFormat("dd-MMMM-yyyy")
-    fun assignNotes(): MutableList<Note> {
-
-        val notes: MutableList<Note> = ArrayList()
-        notes.add(Note("Task1",
-                "Body1",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task2",
-                "Body2",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task3",
-                "Body3",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task4",
-                "Body4",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task5",
-                "Body5",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task6",
-                "Body6",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
-        notes.add(Note("Task1",
-                "Body1",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task2",
-                "Body2",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task3",
-                "Body3",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task4",
-                "Body4",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task5",
-                "Body5",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task6",
-                "Body6",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
-
-        return notes
-    }
 }
