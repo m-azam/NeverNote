@@ -1,6 +1,5 @@
 package infrrd.ai.nevernote
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,12 +9,7 @@ import android.provider.MediaStore
 import android.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.DateFormat
-import java.text.Format
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import android.os.Environment.getExternalStorageDirectory
 import android.provider.Settings
@@ -26,9 +20,6 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-import org.jsoup.Jsoup
-
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
