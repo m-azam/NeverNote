@@ -91,10 +91,11 @@ class NewNote: AppCompatActivity() {
         when (item?.itemId) {
             R.id.save -> {
                 var title : String
-                var body: String?
-                if(note_title.text.toString().isNullOrEmpty() && note_body.html.isNullOrBlank()) {
+                var body: String
+                if(checkNull(note_title.text.toString())&&checkNull(note_body.html)) {
                     Toast.makeText(this,"Cannot save empty note",Toast.LENGTH_SHORT).show()
                 }
+
                 else {
                     if(note_title.text.toString().isEmpty()) {
                         note_title.setText(R.string.untitled_note)
@@ -103,17 +104,19 @@ class NewNote: AppCompatActivity() {
                     else {
                         title = note_title.text.toString()
                     }
+                    if(checkNull(note_body.html)) {
+                        body = ""
+                    }
+                    else {
+                        body = note_body.html
+                    }
                     Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
-                    body = note_body.html
                     var gson = Gson()
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
                     val returnIntent = Intent()
-<<<<<<< HEAD
                     returnIntent.putExtra("result",gson.toJson(newNote))
-=======
-                    returnIntent.putExtra("result","xtf")
->>>>>>> eb376cd0202d892a1baae0390f98bd0364fada96
+
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }

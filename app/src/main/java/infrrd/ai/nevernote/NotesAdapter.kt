@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.RelativeLayout
+import jp.wasabeef.richeditor.RichEditor
 import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
+import org.jsoup.Jsoup
 
 class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
     : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener, Filterable {
@@ -75,7 +77,7 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.note.title.text = myDataset[position].title
-        holder.note.body.text = myDataset[position].body
+        holder.note.body.text = Jsoup.parse(myDataset[position].body).text()
         holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE
         holder.note.checkbox_multiselect.isChecked = myDataset[position].isSelected()
         if (myDataset[position].isSelected()) {
