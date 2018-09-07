@@ -106,6 +106,7 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
             myDataset[index].onDeselect()
         }
         notifyDataSetChanged()
+        selectCount = 0
         multiSelect = false
     }
 }

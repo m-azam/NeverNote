@@ -76,7 +76,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
     private fun takePicture() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])
-                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[1])) {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri = Uri.fromParts("package", this.packageName, null)
             intent.data = uri

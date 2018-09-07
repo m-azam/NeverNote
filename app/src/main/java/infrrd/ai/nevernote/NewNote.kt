@@ -116,7 +116,6 @@ class NewNote: AppCompatActivity() {
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
                     val returnIntent = Intent()
                     returnIntent.putExtra("result",gson.toJson(newNote))
-
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }
