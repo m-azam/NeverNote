@@ -27,8 +27,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-
-
+import org.jsoup.Jsoup
 
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
