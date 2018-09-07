@@ -12,8 +12,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
@@ -21,9 +19,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import jp.wasabeef.richeditor.RichEditor
 import kotlinx.android.synthetic.main.new_note.*
-import kotlinx.android.synthetic.main.new_note.view.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
