@@ -37,8 +37,8 @@ class NewNote: AppCompatActivity() {
     var isUnderline: Boolean = false
     var isStrike: Boolean = false
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var latitiude:Double? = 0.0
-    private var longitude:Double? = 0.0
+    private var latitiude:Double? = null
+    private var longitude:Double? = null
     private val MY_PERMISSION_REQUEST_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,8 +105,7 @@ class NewNote: AppCompatActivity() {
                     Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
                     body = note_body.html
-
-                    var newNote = Note(title,body,Date(System.currentTimeMillis()), false)
+                    var newNote = Note(title,body,Date(System.currentTimeMillis()), false, latitiude, longitude)
                     val returnIntent = Intent()
                     returnIntent.putExtra("result","xtf")
                     setResult(Activity.RESULT_OK, returnIntent)
@@ -285,8 +284,8 @@ class NewNote: AppCompatActivity() {
                 requestLocationAccess()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
-                    this.latitiude = location?.latitude
-                    this.longitude = location?.longitude
+                    latitiude = location?.latitude
+                    longitude = location?.longitude
                 }
             }
 //            no need for explanation
@@ -294,16 +293,16 @@ class NewNote: AppCompatActivity() {
                 requestLocationAccess()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
-                    this.latitiude = location?.latitude
-                    this.longitude = location?.longitude
+                    latitiude = location?.latitude
+                    longitude = location?.longitude
                 }
             }
         }
         else{
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
-                this.latitiude = location?.latitude
-                this.longitude = location?.longitude
+                latitiude = location?.latitude
+                longitude = location?.longitude
             }
         }
     }

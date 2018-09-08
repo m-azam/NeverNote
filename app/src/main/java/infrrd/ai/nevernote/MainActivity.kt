@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,6 +23,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
 import java.io.File
 
 
@@ -34,7 +36,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var myDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -146,41 +147,41 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
         val notes: MutableList<Note> = ArrayList()
         notes.add(Note("Task1",
-                "Body1",formatter.parse("7-JUNE-2013"), false))
+                "Body1",formatter.parse("7-JUNE-2013"), false, 23.23, 34.23))
         notes.add(Note("Task2",
-                "Body2",formatter.parse("7-JUNE-2013"), false))
+                "Body2",formatter.parse("7-JUNE-2013"), false, 34.34, 45.234))
         notes.add(Note("Task3",
-                "Body3",formatter.parse("7-JUNE-2013"), false))
+                "Body3",formatter.parse("7-JUNE-2013"), false, 34.34, 454.34))
         notes.add(Note("Task4",
-                "Body4",formatter.parse("7-JUNE-2013"), false))
+                "Body4",formatter.parse("7-JUNE-2013"), false,234.34, 34.45))
         notes.add(Note("Task5",
-                "Body5",formatter.parse("7-JUNE-2013"), false))
+                "Body5",formatter.parse("7-JUNE-2013"), false, 45.34, 76.45))
         notes.add(Note("Task6",
-                "Body6",formatter.parse("7-JUNE-2013"), false))
+                "Body6",formatter.parse("7-JUNE-2013"), false, 45.46, 34.456))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
+                "Body7",formatter.parse("7-JUNE-2013"), false, 34.56, 34.78))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
+                "Body7",formatter.parse("7-JUNE-2013"), false, 34.45, 45.34))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false))
+                "Body7",formatter.parse("7-JUNE-2013"), false, 34.45, 23.45))
         notes.add(Note("Task1",
-                "Body1",formatter.parse("8-AUGUST-2013"), false))
+                "Body1",formatter.parse("8-AUGUST-2013"), false, 34.45, 23.45))
         notes.add(Note("Task2",
-                "Body2",formatter.parse("8-AUGUST-2013"), false))
+                "Body2",formatter.parse("8-AUGUST-2013"), false, 34.35, 23.45))
         notes.add(Note("Task3",
-                "Body3",formatter.parse("8-AUGUST-2013"), false))
+                "Body3",formatter.parse("8-AUGUST-2013"), false, 34.45, 78.23))
         notes.add(Note("Task4",
-                "Body4",formatter.parse("8-AUGUST-2013"), false))
+                "Body4",formatter.parse("8-AUGUST-2013"), false, 34.45, 56.45))
         notes.add(Note("Task5",
-                "Body5",formatter.parse("8-AUGUST-2013"), false))
+                "Body5",formatter.parse("8-AUGUST-2013"), false, 34.45, 23.35))
         notes.add(Note("Task6",
-                "Body6",formatter.parse("8-AUGUST-2013"), false))
+                "Body6",formatter.parse("8-AUGUST-2013"), false, 34.45, 34.67))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
+                "Body7",formatter.parse("8-AUGUST-2013"), false, 34.87, 23.34))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
+                "Body7",formatter.parse("8-AUGUST-2013"), false, 45.46, 34.45))
         notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false))
+                "Body7",formatter.parse("8-AUGUST-2013"), false, 34.46, 34.45))
 
         return notes
     }
