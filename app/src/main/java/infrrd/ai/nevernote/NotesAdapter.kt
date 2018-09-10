@@ -7,15 +7,19 @@ import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
+import org.jsoup.Jsoup
 
 class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
-    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener {
+    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener, Filterable {
 
     var multiSelect: Boolean = false
     var selectCount: Int = 0
     var selectedArray: ArrayList<Int> = arrayListOf()
+    var filteredNotes: MutableList<Note> = myDataset
 
     interface ActionBarCallback {
         var actionMode: ActionMode?
@@ -32,9 +36,9 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
 
         override fun onClick(view: View?) {
             if (multiSelect) {
-                note.checkbox_multiselect.isChecked = !myDataset[adapterPosition].isSelected()
-                if (myDataset[adapterPosition].isSelected()) {
-                    myDataset[adapterPosition].onDeselect()
+                note.checkbox_multiselect.isChecked = !filteredNotes[adapterPosition].isSelected()
+                if (filteredNotes[adapterPosition].isSelected()) {
+                    filteredNotes[adapterPosition].onDeselect()
                     selectedArray.remove(adapterPosition)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
                     selectCount -= 1
@@ -42,7 +46,7 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
                         actionBarCallback.finishActionBar()
                     }
                 } else {
-                    myDataset[adapterPosition].onSelect()
+                    filteredNotes[adapterPosition].onSelect()
                     selectedArray.add(adapterPosition)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                     selectCount += 1
@@ -53,7 +57,7 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
         override fun onLongClick(view: View?): Boolean {
             if (!multiSelect) {
                 multiSelect = true
-                myDataset[adapterPosition].onSelect()
+                filteredNotes[adapterPosition].onSelect()
                 selectedArray.add(adapterPosition)
                 view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                 selectCount += 1
@@ -72,24 +76,54 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.note.title.text = myDataset[position].title
-        holder.note.body.text = myDataset[position].body
+        holder.note.title.text = filteredNotes[position].title
+        holder.note.body.text = Jsoup.parse(filteredNotes[position].body).text()
         holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE
-        holder.note.checkbox_multiselect.isChecked = myDataset[position].isSelected()
-        if (myDataset[position].isSelected()) {
+        holder.note.checkbox_multiselect.isChecked = filteredNotes[position].isSelected()
+        if (filteredNotes[position].isSelected()) {
             holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
         } else {
             holder.note.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
         }
     }
 
-    override fun getItemCount() = myDataset.size
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(filterCharSequence: CharSequence?): FilterResults {
+                val filterString = filterCharSequence.toString()
+                if (filterString.isEmpty()) {
+                    filteredNotes = myDataset
+                } else {
+                    val temporaryFilteredNotesSet = arrayListOf<Note>()
+                    for (note in myDataset) {
+                        if ((note.title.toLowerCase().contains(filterString.toLowerCase()))
+                                || (note.body.toLowerCase().contains(filterString.toLowerCase()))) {
+                            temporaryFilteredNotesSet.add(note)
+                        }
+                    }
+                    filteredNotes = temporaryFilteredNotesSet
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredNotes
+                return filterResults
+            }
+
+            override fun publishResults(filterCharSequence: CharSequence?, filterResults: FilterResults?) {
+                filteredNotes = filterResults?.values as MutableList<Note>
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun getItemCount() = filteredNotes.size
 
     override fun onExitSelection() {
         for(index in selectedArray) {
-            myDataset[index].onDeselect()
+            filteredNotes[index].onDeselect()
         }
         notifyDataSetChanged()
+        selectCount = 0
         multiSelect = false
     }
+
 }

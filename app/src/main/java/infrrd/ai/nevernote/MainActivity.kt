@@ -1,7 +1,8 @@
 package infrrd.ai.nevernote
 
-import android.Manifest
 import android.app.Activity
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -11,39 +12,40 @@ import android.provider.MediaStore
 import android.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
-import java.text.DateFormat
-import java.text.Format
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 import android.os.Environment.getExternalStorageDirectory
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
+import android.util.Log
+import android.view.Menu
+import android.support.v7.widget.SearchView
+import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
-
-class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
+class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.OnQueryTextListener {
 
     override var actionMode: ActionMode? = null
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private var myDataset: MutableList<Note> = ArrayList()
+    private var notesDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
+    private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         viewManager = LinearLayoutManager(this)
-        myDataset = assignNotes()
-        viewAdapter = NotesAdapter(this, this, myDataset)
+        viewAdapter = NotesAdapter(this, this, notesDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
@@ -53,7 +55,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
         val sectionItemDecoration = RecyclerSectionItemDecoration(100,
                 true,
-                getSectionCallback(myDataset))
+                getSectionCallback(notesDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
 
         text.setOnClickListener{
@@ -70,22 +72,61 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val searchMenuItem = menu?.findItem(R.id.action_search)
+        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView?
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView?.setOnQueryTextListener(this)
+        searchMenuItem?.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                toggle.isDrawerIndicatorEnabled = true //Fixes visual glitch when expanding search bar
+                return true
+            }
+        })
+        return true
+    }
+
     private fun takePicture() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1)
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            val photo = File(getExternalStorageDirectory(), "Pic.jpg")
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo))
-            imageUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photo)
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[1])) {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", this.packageName, null)
+            intent.data = uri
             startActivityForResult(intent, 1)
         }
         else {
-            Toast.makeText(this, "Please provide camera access", Toast.LENGTH_LONG).show()
+            if (checkPermissions()) {
+                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                val photo = File(getExternalStorageDirectory(), "Pic.jpg")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        FileProvider.getUriForFile(this,
+                                BuildConfig.APPLICATION_ID + ".provider", photo))
+                imageUri = FileProvider.getUriForFile(this,
+                        BuildConfig.APPLICATION_ID + ".provider", photo)
+                startActivityForResult(intent, 1)
+            } else {
+                getPermission()
+            }
         }
+    }
+
+    private fun checkPermissions(): Boolean {
+        for (permission in permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun getPermission() {
+        ActivityCompat.requestPermissions(this, permissions, 1)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -100,11 +141,16 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
                 }
             }
             2 -> {
+
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d("LOOK HERE", data?.getStringExtra("result"))
+                    var gson = Gson()
+                    var new_note: Note = gson.fromJson(data?.getStringExtra("result"),
+                            object : TypeToken<Note>(){}.type)
+                    notesDataset.add(0,new_note)
+                    viewAdapter.notifyItemInserted(0)
+
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    //Write your code if there's no result
                 }
             }
         }
@@ -128,6 +174,18 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
         }
     }
 
+    override fun onQueryTextChange(searchQuery: String): Boolean {
+        viewAdapter.filter.filter(searchQuery)
+        Log.d("Adapter", searchQuery)
+        return true
+    }
+
+    override fun onQueryTextSubmit(searchQuery: String): Boolean {
+        viewAdapter.filter.filter(searchQuery)
+        Log.d("Adapter", searchQuery)
+        return true
+    }
+
     override fun getContentView(): Int {
         return R.layout.activity_main
     }
@@ -140,49 +198,4 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
         actionMode?.finish()
     }
 
-
-
-    var formatter = SimpleDateFormat("dd-MMMM-yyyy")
-    fun assignNotes(): MutableList<Note> {
-
-        val notes: MutableList<Note> = ArrayList()
-        notes.add(Note("Task1",
-                "Body1",formatter.parse("7-JUNE-2013"), false, 23.23, 34.23))
-        notes.add(Note("Task2",
-                "Body2",formatter.parse("7-JUNE-2013"), false, 34.34, 45.234))
-        notes.add(Note("Task3",
-                "Body3",formatter.parse("7-JUNE-2013"), false, 34.34, 454.34))
-        notes.add(Note("Task4",
-                "Body4",formatter.parse("7-JUNE-2013"), false,234.34, 34.45))
-        notes.add(Note("Task5",
-                "Body5",formatter.parse("7-JUNE-2013"), false, 45.34, 76.45))
-        notes.add(Note("Task6",
-                "Body6",formatter.parse("7-JUNE-2013"), false, 45.46, 34.456))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false, 34.56, 34.78))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false, 34.45, 45.34))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("7-JUNE-2013"), false, 34.45, 23.45))
-        notes.add(Note("Task1",
-                "Body1",formatter.parse("8-AUGUST-2013"), false, 34.45, 23.45))
-        notes.add(Note("Task2",
-                "Body2",formatter.parse("8-AUGUST-2013"), false, 34.35, 23.45))
-        notes.add(Note("Task3",
-                "Body3",formatter.parse("8-AUGUST-2013"), false, 34.45, 78.23))
-        notes.add(Note("Task4",
-                "Body4",formatter.parse("8-AUGUST-2013"), false, 34.45, 56.45))
-        notes.add(Note("Task5",
-                "Body5",formatter.parse("8-AUGUST-2013"), false, 34.45, 23.35))
-        notes.add(Note("Task6",
-                "Body6",formatter.parse("8-AUGUST-2013"), false, 34.45, 34.67))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false, 34.87, 23.34))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false, 45.46, 34.45))
-        notes.add(Note("Task7",
-                "Body7",formatter.parse("8-AUGUST-2013"), false, 34.46, 34.45))
-
-        return notes
-    }
 }
