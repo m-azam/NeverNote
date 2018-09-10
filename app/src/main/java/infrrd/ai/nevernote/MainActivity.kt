@@ -2,6 +2,8 @@ package infrrd.ai.nevernote
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -23,6 +25,10 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.maps.model.LatLng
 import java.io.File
 
@@ -67,6 +73,18 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
             takePicture()
         }
 
+//        Instantiate the Request Queue
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://192.168.0.118:8080/"
+//        Request a string response from the provided url
+        val stringRequest = StringRequest(Request.Method.GET, url,
+                Response.Listener<String> { response ->
+                    // Display the first 500 characters of the response string
+
+                },
+                Response.ErrorListener {
+                })
+        queue.add(stringRequest)
     }
 
 
