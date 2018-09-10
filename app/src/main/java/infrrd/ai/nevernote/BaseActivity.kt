@@ -89,13 +89,14 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
 
-    private fun openSettingsActivity(){
+    private fun openSettingsActivity() {
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)
     }
 
-    private fun openMapViewActivity(){
+    private fun openMapViewActivity() {
         val mapViewActivityIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapViewActivityIntent)
     }
+
 }

@@ -9,8 +9,9 @@ import android.provider.MediaStore
 import android.view.ActionMode
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import kotlinx.android.synthetic.main.activity_main.text
+import kotlinx.android.synthetic.main.activity_main.audio
+import kotlinx.android.synthetic.main.activity_main.camera
 import android.os.Environment.getExternalStorageDirectory
 import android.provider.Settings
 import android.support.v4.app.ActivityCompat

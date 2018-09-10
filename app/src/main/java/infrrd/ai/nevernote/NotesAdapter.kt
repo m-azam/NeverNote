@@ -10,8 +10,9 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.RelativeLayout
-import jp.wasabeef.richeditor.RichEditor
-import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.body
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.checkbox_multiselect
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.title
 import org.jsoup.Jsoup
 
 class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
