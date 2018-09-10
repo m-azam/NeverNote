@@ -1,6 +1,8 @@
 package infrrd.ai.nevernote
 
 import android.app.Activity
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -16,12 +18,15 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
+import android.util.Log
+import android.view.Menu
+import android.support.v7.widget.SearchView
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 
-class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
+class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.OnQueryTextListener {
 
     override var actionMode: ActionMode? = null
 
@@ -64,6 +69,15 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
 
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView?
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView?.setOnQueryTextListener(this)
+        return true
+    }
 
     private fun takePicture() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])
@@ -145,6 +159,18 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback {
                 return header
             }
         }
+    }
+
+    override fun onQueryTextChange(searchQuery: String): Boolean {
+        viewAdapter.filter.filter(searchQuery)
+        Log.d("Adapter", searchQuery)
+        return true
+    }
+
+    override fun onQueryTextSubmit(searchQuery: String): Boolean {
+        viewAdapter.filter.filter(searchQuery)
+        Log.d("Adapter", searchQuery)
+        return true
     }
 
     override fun getContentView(): Int {
