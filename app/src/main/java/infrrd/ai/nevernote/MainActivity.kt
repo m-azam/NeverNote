@@ -21,6 +21,7 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.Menu
 import android.support.v7.widget.SearchView
+import android.view.MenuItem
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -72,10 +73,21 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
+        val searchMenuItem = menu?.findItem(R.id.action_search)
         val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView?
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView?.setOnQueryTextListener(this)
+        searchMenuItem?.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                toggle.isDrawerIndicatorEnabled = true //Fixes visual glitch when expanding search bar
+                return true
+            }
+        })
         return true
     }
 
