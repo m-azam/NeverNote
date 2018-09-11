@@ -12,8 +12,6 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
@@ -21,9 +19,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import jp.wasabeef.richeditor.RichEditor
 import kotlinx.android.synthetic.main.new_note.*
-import kotlinx.android.synthetic.main.new_note.view.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,6 +37,7 @@ class NewNote: AppCompatActivity() {
     private var latitiude:Double? = null
     private var longitude:Double? = null
     private val MY_PERMISSION_REQUEST_LOCATION = 1
+    private var position:Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -56,10 +53,9 @@ class NewNote: AppCompatActivity() {
 
         getLocation()
 
-        note_body_hint.setOnClickListener {
-            Log.d(TAG,"inside note_body hint")
-            note_body.focusEditor()
-        }
+        val intent: Intent = getIntent()
+        position = intent.getIntExtra("Position",-1)
+
         note_body.setOnTextChangeListener {
             if(it.isEmpty()) {
                 note_body_hint.visibility  = View.VISIBLE
@@ -70,12 +66,26 @@ class NewNote: AppCompatActivity() {
                 note_body_hint.visibility  = View.GONE
             }
         }
+
+
+
+        note_body_hint.setOnClickListener {
+            note_body.focusEditor()
+        }
+
         note_body.setOnFocusChangeListener { v, hasFocus ->
             if(!hasFocus) {
                 textOptionsVisible = false
                 text_format_options.visibility = View.GONE
 
             }
+        }
+        if(position != -1) {
+            note_body.html = intent.getStringExtra("Body")
+            if(!checkNull(intent.getStringExtra("Body"))) {
+                note_body_hint.visibility = View.GONE
+            }
+            note_title.setText(intent.getStringExtra("Title"))
         }
         note_body.setTextBackgroundColor(R.color.theme_light)
     }
@@ -116,10 +126,10 @@ class NewNote: AppCompatActivity() {
                     var newNote = Note(title,body,Date(System.currentTimeMillis()), false, latitiude, longitude)
                     val returnIntent = Intent()
                     returnIntent.putExtra("result",gson.toJson(newNote))
+                    returnIntent.putExtra("Position",position)
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
                 }
-
                 true
             }
             R.id.redo_text -> {
@@ -283,12 +293,8 @@ class NewNote: AppCompatActivity() {
     }
 
     fun getLocation(){
-        Toast.makeText(this, "get lcoation called", Toast.LENGTH_SHORT).show()
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//            permission is not granted
-//            should an explanation be shown
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-                Toast.makeText(this, "Location is requred", Toast.LENGTH_SHORT).show()
                 requestLocationAccess()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
@@ -296,7 +302,6 @@ class NewNote: AppCompatActivity() {
                     longitude = location?.longitude
                 }
             }
-//            no need for explanation
             else{
                 requestLocationAccess()
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)

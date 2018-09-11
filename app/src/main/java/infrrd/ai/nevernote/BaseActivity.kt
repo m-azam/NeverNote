@@ -73,7 +73,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.trash -> {
-                Toast.makeText(this, "trash button clicked", Toast.LENGTH_SHORT).show()
+                onDelete()
             }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
@@ -94,14 +94,17 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return true
     }
 
+    abstract fun onDelete()
 
-    private fun openSettingsActivity(){
+
+    private fun openSettingsActivity() {
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)
     }
 
-    private fun openMapViewActivity(){
+    private fun openMapViewActivity() {
         val mapViewActivityIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapViewActivityIntent)
     }
+
 }
