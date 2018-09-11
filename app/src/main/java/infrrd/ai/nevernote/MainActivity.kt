@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -23,6 +24,7 @@ import android.view.Menu
 import android.support.v7.widget.SearchView
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -37,7 +39,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private var notesDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

@@ -37,4 +37,6 @@
     <string name="settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="map_view">Map</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>
