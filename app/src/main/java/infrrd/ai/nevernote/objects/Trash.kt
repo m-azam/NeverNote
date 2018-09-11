@@ -24,7 +24,7 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = NotesAdapter(null,this, this, trashDataset)
-        recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
+        recyclerView = findViewById<RecyclerView>(R.id.trash_recycler).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
@@ -34,7 +34,6 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
                 true,
                 getSectionCallback(trashDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
-        setContentView(R.layout.activity_trash)
     }
 
     override fun getContentView(): Int {
@@ -77,11 +76,6 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
         finishActionBar()
         viewAdapter.selectCount = 0
         viewAdapter.multiSelect = false
-    }
-
-    override fun onDelete() {
-        val intent = Intent(this, Trash::class.java)
-        startActivity(intent)
     }
 
 }

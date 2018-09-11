@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import infrrd.ai.nevernote.objects.AppPreferences
+import infrrd.ai.nevernote.objects.Trash
 import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -73,8 +74,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.trash -> {
-                onDelete()
-            }
+                val intent = Intent(this, Trash::class.java)
+                startActivity(intent)            }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
             }
@@ -94,7 +95,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return true
     }
 
-    abstract fun onDelete()
 
 
     private fun openSettingsActivity() {

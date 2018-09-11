@@ -222,8 +222,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         actionMode?.finish()
     }
 
-
-
     override fun onDeleteSelection() {
         viewAdapter.selectedArray.sort()
         viewAdapter.selectedArray.reverse()
@@ -237,11 +235,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     viewAdapter.selectCount = 0
     viewAdapter.multiSelect = false
 
-    }
-
-    override fun onDelete() {
-        val intent = Intent(this, Trash::class.java)
-        startActivity(intent)
     }
 
 }

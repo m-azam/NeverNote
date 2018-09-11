@@ -2,6 +2,7 @@ package infrrd.ai.nevernote
 
 import android.Manifest
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.widget.Toast
+import infrrd.ai.nevernote.objects.Trash
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 
@@ -48,6 +50,8 @@ class MapsActivity() : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindo
             requestMap()
         }
     }
+
+
 
     fun requestPermission(permission:String){
         ActivityCompat.requestPermissions(this, arrayOf(permission), MY_PERMISSIONS_REQUEST_LOCATION)
