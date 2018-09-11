@@ -5,7 +5,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -23,7 +22,6 @@ import android.view.Menu
 import android.support.v7.widget.SearchView
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import infrrd.ai.nevernote.objects.AppPreferences
@@ -35,12 +33,17 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
          ActionBarCallBack.OnDeleteSelectionListener {
 
     override var actionMode: ActionMode? = null
+    private lateinit var sampleVariable:String
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
+<<<<<<< HEAD
+    private var notesDataset: MutableList<Note> = arrayListOf()
+=======
     private var notesDataset: MutableList<Note> = ArrayList()
     private var trashNotes: MutableList<Note> = ArrayList()
+>>>>>>> 371f0c35a533d553f8265735d58bee8138f53d6d
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
@@ -54,7 +57,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-
         viewManager = LinearLayoutManager(this)
         viewAdapter = NotesAdapter(editNote,this, this, notesDataset)
         recyclerView = findViewById<RecyclerView>(R.id.note_recycler).apply {
@@ -93,11 +95,11 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView?.setOnQueryTextListener(this)
         searchMenuItem?.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(menuItem: MenuItem?): Boolean {
                 return true
             }
 
-            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+            override fun onMenuItemActionCollapse(menuItem: MenuItem?): Boolean {
                 toggle.isDrawerIndicatorEnabled = true //Fixes visual glitch when expanding search bar
                 return true
             }
