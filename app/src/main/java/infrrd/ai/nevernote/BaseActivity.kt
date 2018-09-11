@@ -4,24 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import infrrd.ai.nevernote.objects.AppPreferences
 import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_activity)
         layoutInflater.inflate(getContentView(), layout_container, true)
         setSupportActionBar(toolbar)
-        val toggle = ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -32,7 +35,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     abstract fun getContentView(): Int
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val menuInflater: MenuInflater = getMenuInflater()
+        val menuInflater: MenuInflater = menuInflater
         menuInflater.inflate(R.menu.options_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
@@ -55,6 +58,14 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 openSettingsActivity()
                 true
             }
+            R.id.action_search -> {
+                toggle.isDrawerIndicatorEnabled = false//Fixes visual glitch when expanding search bar
+                true
+            }
+            R.id.notes_map_view -> {
+                openMapViewActivity()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -62,7 +73,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.trash -> {
-                Toast.makeText(this, "trash button clicked", Toast.LENGTH_SHORT).show()
+                onDelete()
             }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
@@ -83,8 +94,17 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return true
     }
 
-    private fun openSettingsActivity(){
+    abstract fun onDelete()
+
+
+    private fun openSettingsActivity() {
         val settingsActivityIntent = Intent(this, SettingsActivity::class.java)
         startActivity(settingsActivityIntent)
     }
+
+    private fun openMapViewActivity() {
+        val mapViewActivityIntent = Intent(this, MapsActivity::class.java)
+        startActivity(mapViewActivityIntent)
+    }
+
 }
