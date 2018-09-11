@@ -22,7 +22,8 @@
         android:layout_marginRight="8dp"
         android:background="@android:color/transparent"
         android:textColor="@android:color/black"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:clickable="false"/>
     <View
         android:layout_width="match_parent"
         app:layout_constrainedWidth="true"

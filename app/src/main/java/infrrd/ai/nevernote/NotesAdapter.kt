@@ -1,8 +1,12 @@
 package infrrd.ai.nevernote
 
 import android.content.Context
+import android.content.Intent
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +14,20 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.RelativeLayout
-import kotlinx.android.synthetic.main.recycler_cell_layout.view.*
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.body
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.checkbox_multiselect
+import kotlinx.android.synthetic.main.recycler_cell_layout.view.title
 import org.jsoup.Jsoup
 
-class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val context: Context, private val myDataset: MutableList<Note>)
-    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener, Filterable {
+class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,private val actionBarCallback: ActionBarCallback,
+                   private val context: Context, private val notesDataset: MutableList<Note>)
+    : RecyclerView.Adapter<NotesAdapter.MyViewHolder>(), ActionBarCallBack.OnExitSelectionListener,Filterable {
 
     var multiSelect: Boolean = false
     var selectCount: Int = 0
     var selectedArray: ArrayList<Int> = arrayListOf()
-    var filteredNotes: MutableList<Note> = myDataset
+    var filteredNotes: MutableList<Note> = notesDataset
+    var trashNotes: MutableList<Note> = ArrayList()
 
     interface ActionBarCallback {
         var actionMode: ActionMode?
@@ -27,7 +35,8 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
         fun finishActionBar()
     }
 
-    inner class MyViewHolder(val note: RelativeLayout) : RecyclerView.ViewHolder(note), View.OnLongClickListener, View.OnClickListener {
+
+    inner class MyViewHolder(val note: RelativeLayout) :  RecyclerView.ViewHolder(note), View.OnLongClickListener, View.OnClickListener {
 
         init {
             note.setOnLongClickListener(this)
@@ -50,6 +59,11 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
                     selectedArray.add(adapterPosition)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                     selectCount += 1
+                }
+            }
+            else {
+                editNote?.let {
+                    it(adapterPosition,filteredNotes[adapterPosition])
                 }
             }
         }
@@ -77,7 +91,16 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.note.title.text = filteredNotes[position].title
-        holder.note.body.text = Jsoup.parse(filteredNotes[position].body).text()
+        var parsedString: String = Jsoup.parse(filteredNotes[position].body).text()
+        var outputBody: String
+        if( parsedString.length > 90) {
+            outputBody = parsedString.substring(0,87) + "..."
+        }
+        else {
+            outputBody = parsedString
+        }
+
+        holder.note.body.text = outputBody
         holder.note.checkbox_multiselect.visibility = if (multiSelect) View.VISIBLE else View.GONE
         holder.note.checkbox_multiselect.isChecked = filteredNotes[position].isSelected()
         if (filteredNotes[position].isSelected()) {
@@ -92,10 +115,10 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
             override fun performFiltering(filterCharSequence: CharSequence?): FilterResults {
                 val filterString = filterCharSequence.toString()
                 if (filterString.isEmpty()) {
-                    filteredNotes = myDataset
+                    filteredNotes = notesDataset
                 } else {
                     val temporaryFilteredNotesSet = arrayListOf<Note>()
-                    for (note in myDataset) {
+                    for (note in notesDataset) {
                         if ((note.title.toLowerCase().contains(filterString.toLowerCase()))
                                 || (note.body.toLowerCase().contains(filterString.toLowerCase()))) {
                             temporaryFilteredNotesSet.add(note)
@@ -118,10 +141,23 @@ class NotesAdapter(private val actionBarCallback: ActionBarCallback, private val
     override fun getItemCount() = filteredNotes.size
 
     override fun onExitSelection() {
-        for(index in selectedArray) {
-            filteredNotes[index].onDeselect()
+        if(true) {
+            for(index in selectedArray) {
+                filteredNotes[index].onDeselect()
+            }
         }
-        notifyDataSetChanged()
+        else {
+            selectedArray.sort()
+            selectedArray.reverse()
+            for(index in selectedArray) {
+                trashNotes.add(0,filteredNotes[index])
+                filteredNotes.removeAt(index)
+            }
+            selectedArray.clear()
+            notifyDataSetChanged()
+            actionBarCallback.finishActionBar()
+        }
+
         selectCount = 0
         multiSelect = false
     }

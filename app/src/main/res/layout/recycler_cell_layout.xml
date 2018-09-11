@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/note_layout">
+    android:id="@+id/note_layout"
+    android:foreground="?android:attr/selectableItemBackground"
+    >
 
     <CheckBox
         android:id="@+id/checkbox_multiselect"
@@ -12,17 +14,15 @@
         android:layout_marginTop="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:visibility="gone"
         android:clickable="false"
         android:button="@drawable/checkbox_selector"/>
     
     <TextView
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/title"
-        android:layout_marginLeft="7dp"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toEndOf="@+id/checkbox_multiselect"
-        android:layout_toRightOf="@+id/checkbox_multiselect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
@@ -33,20 +33,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/checkbox_multiselect"
-        android:layout_toRightOf="@+id/checkbox_multiselect"
         android:layout_below="@+id/title"
         android:textSize="15sp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:textColor="@color/grey"
         android:layout_marginTop="10dp"/>
+
     <View
-        android:layout_height="2dp"
         android:layout_width="match_parent"
-        android:layout_above="@+id/title"
-        android:background="@color/settings_background_on_touch"
-        android:layout_marginStart="10dp"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/body"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"/>
+        android:layout_marginStart="10dp"
+        android:background="@color/grey"/>
 </RelativeLayout>
