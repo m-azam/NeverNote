@@ -12,7 +12,6 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
         AppPreferences.init(this)
-        VolleyConfig.init(applicationContext)
         Handler().postDelayed({
             nextScreenLoginCheck()
         }, 1000)

@@ -141,21 +141,8 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
     override fun getItemCount() = filteredNotes.size
 
     override fun onExitSelection() {
-        if(true) {
-            for(index in selectedArray) {
-                filteredNotes[index].onDeselect()
-            }
-        }
-        else {
-            selectedArray.sort()
-            selectedArray.reverse()
-            for(index in selectedArray) {
-                trashNotes.add(0,filteredNotes[index])
-                filteredNotes.removeAt(index)
-            }
-            selectedArray.clear()
-            notifyDataSetChanged()
-            actionBarCallback.finishActionBar()
+        for(index in selectedArray) {
+            filteredNotes[index].onDeselect()
         }
 
         selectCount = 0

@@ -3,6 +3,7 @@ package infrrd.ai.nevernote
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
+import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_signup.signup_email_id_text_input_layout
 import kotlinx.android.synthetic.main.activity_signup.signup_email_id_text_input
 import kotlinx.android.synthetic.main.activity_signup.signup_password_text_input_layout
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_signup.signup_button
 import kotlinx.android.synthetic.main.activity_signup.close_signup_screen
 import java.util.regex.Pattern
 
-class SignupActivity : BaseActivity() {
+class SignupActivity:AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +35,6 @@ class SignupActivity : BaseActivity() {
                 goToLoginScreen()
             }
         }
-    }
-
-    override fun getContentView(): Int {
-        return R.layout.activity_signup
     }
 
     fun goToLoginScreen(){
