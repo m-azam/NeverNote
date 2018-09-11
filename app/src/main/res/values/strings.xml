@@ -38,4 +38,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="map_view">Map</string>
     <string name="title_activity_trash">Trash</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

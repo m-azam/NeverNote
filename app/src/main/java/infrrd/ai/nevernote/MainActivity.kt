@@ -5,6 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,6 +23,7 @@ import android.view.Menu
 import android.support.v7.widget.SearchView
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import infrrd.ai.nevernote.objects.AppPreferences
@@ -42,8 +44,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
-
-
     val editNote = {position:Int, note:Note ->
         val intent = Intent(this, NewNote::class.java)
         intent.putExtra("Title",note.title)
@@ -51,9 +51,6 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         intent.putExtra("Position",position)
         startActivityForResult(intent,2)
     }
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -90,10 +87,21 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
+        val searchMenuItem = menu?.findItem(R.id.action_search)
         val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView?
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView?.setOnQueryTextListener(this)
+        searchMenuItem?.setOnActionExpandListener(object: MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                toggle.isDrawerIndicatorEnabled = true //Fixes visual glitch when expanding search bar
+                return true
+            }
+        })
         return true
     }
 

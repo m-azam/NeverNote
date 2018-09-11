@@ -17,12 +17,14 @@ import kotlinx.android.synthetic.main.base_activity.*
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var toggle: ActionBarDrawerToggle
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.base_activity)
         layoutInflater.inflate(getContentView(), layout_container, true)
         setSupportActionBar(toolbar)
-        val toggle = ActionBarDrawerToggle(
+        toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -54,6 +56,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             }
             R.id.settings -> {
                 openSettingsActivity()
+                true
+            }
+            R.id.action_search -> {
+                toggle.isDrawerIndicatorEnabled = false//Fixes visual glitch when expanding search bar
                 true
             }
             R.id.notes_map_view -> {

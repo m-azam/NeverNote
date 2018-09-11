@@ -2,6 +2,7 @@ package infrrd.ai.nevernote.objects
 
 import android.os.Bundle
 import android.app.Activity
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ActionMode
@@ -76,7 +77,11 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
         finishActionBar()
         viewAdapter.selectCount = 0
         viewAdapter.multiSelect = false
+    }
 
+    override fun onDelete() {
+        val intent = Intent(this, Trash::class.java)
+        startActivity(intent)
     }
 
 }
