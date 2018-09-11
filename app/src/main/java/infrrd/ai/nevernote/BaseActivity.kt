@@ -67,7 +67,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.trash -> {
-                Toast.makeText(this, "trash button clicked", Toast.LENGTH_SHORT).show()
+                onDelete()
             }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
@@ -87,6 +87,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    abstract fun onDelete()
 
 
     private fun openSettingsActivity() {
