@@ -38,12 +38,8 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-<<<<<<< HEAD
-    private var notesDataset: MutableList<Note> = arrayListOf()
-=======
     private var notesDataset: MutableList<Note> = ArrayList()
     private var trashNotes: MutableList<Note> = ArrayList()
->>>>>>> 371f0c35a533d553f8265735d58bee8138f53d6d
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
