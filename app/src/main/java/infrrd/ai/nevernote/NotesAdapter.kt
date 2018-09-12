@@ -79,6 +79,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                 actionBarCallback.startActionBar()
                 multiSelect = true
                 notifyDataSetChanged()
+
             }
             return true
         }
