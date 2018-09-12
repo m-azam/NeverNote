@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.ActionMode
@@ -21,6 +22,7 @@ import android.util.Log
 import android.view.Menu
 import android.support.v7.widget.SearchView
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -219,17 +221,18 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
     override fun startActionBar() {
         actionMode = this.startActionMode(ActionBarCallBack(viewAdapter,this))
+        note_actions.visibility = View.GONE
     }
 
     override fun finishActionBar() {
         actionMode?.finish()
+        note_actions.visibility = View.VISIBLE
     }
 
     override fun onDeleteSelection() {
         viewAdapter.selectedArray.sort()
         viewAdapter.selectedArray.reverse()
         for(index in viewAdapter.selectedArray) {
-            trashNotes.add(0,notesDataset[index])
             notesDataset.removeAt(index)
         }
         viewAdapter.selectedArray.clear()
