@@ -45,6 +45,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
 
         override fun onClick(view: View?) {
             if (multiSelect) {
+
                 note.checkbox_multiselect.isChecked = !filteredNotes[adapterPosition].isSelected()
                 if (filteredNotes[adapterPosition].isSelected()) {
                     filteredNotes[adapterPosition].onDeselect()
@@ -144,9 +145,8 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
         for(index in selectedArray) {
             filteredNotes[index].onDeselect()
         }
-
+        notifyDataSetChanged()
         selectCount = 0
         multiSelect = false
     }
-
 }

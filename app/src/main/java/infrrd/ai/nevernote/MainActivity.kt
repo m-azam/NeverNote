@@ -162,6 +162,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
                     if(position == -1) {
                         Log.d("inside if","lolol")
                         notesDataset.add(0,new_note)
+
                         viewAdapter.notifyItemInserted(0)
 
                     }
@@ -177,6 +178,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
+
                 }
             }
         }
@@ -184,6 +186,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
     private fun getSectionCallback(notes: List<Note>): RecyclerSectionItemDecoration.SectionCallback {
         return object : RecyclerSectionItemDecoration.SectionCallback {
+
             override fun isSection(position: Int): Boolean {
                 return position == 0 || getHeader(position) != getHeader(position - 1)
             }
@@ -236,5 +239,4 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     viewAdapter.multiSelect = false
 
     }
-
 }
