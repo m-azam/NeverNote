@@ -53,6 +53,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                     selectCount -= 1
                     if(selectCount == 0) {
                         actionBarCallback.finishActionBar()
+                        notifyDataSetChanged()
                     }
                 } else {
                     filteredNotes[adapterPosition].onSelect()
@@ -144,7 +145,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
         for(index in selectedArray) {
             filteredNotes[index].onDeselect()
         }
-
+        notifyDataSetChanged()
         selectCount = 0
         multiSelect = false
     }
