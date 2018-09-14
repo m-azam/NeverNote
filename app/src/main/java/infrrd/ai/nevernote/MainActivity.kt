@@ -3,9 +3,9 @@ package infrrd.ai.nevernote
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,14 +19,17 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
+import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.Menu
 import android.support.v7.widget.SearchView
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.OnQueryTextListener {
@@ -69,6 +72,44 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             takePicture()
         }
 
+//        api code goes here
+        val apiService = ApiServiceGenerator.createService(Api::class.java)
+        val note = NoteApiModel()
+        note.email = "email"
+        note.password = "password"
+        val callAsync = apiService.verfiyUser(note)
+
+        callAsync.enqueue(object : Callback<NoteApiModel>{
+            override fun onResponse(call: Call<NoteApiModel>, response: Response<NoteApiModel>) {
+                createExplanationDialog(response.body()?.email?:"null received")
+            }
+
+            override fun onFailure(call: Call<NoteApiModel>, t: Throwable) {
+                createErrorDialog(t)
+            }
+        })
+    }
+
+    private fun createExplanationDialog(response:String){
+        val explanationDialogBuider = AlertDialog.Builder(this)
+        explanationDialogBuider.setMessage("Result from the server is "+response)
+        explanationDialogBuider.setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, id ->
+        })
+        explanationDialogBuider.setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, id ->
+        })
+        val explanationdialog = explanationDialogBuider.create()
+        explanationdialog.show()
+    }
+
+    private fun createErrorDialog(throwable: Throwable){
+        val explanationDialogBuider = AlertDialog.Builder(this)
+        explanationDialogBuider.setMessage("Error is: "+throwable.toString())
+        explanationDialogBuider.setPositiveButton(R.string.ok, DialogInterface.OnClickListener { dialog, id ->
+        })
+        explanationDialogBuider.setNegativeButton(R.string.cancel, DialogInterface.OnClickListener { dialog, id ->
+        })
+        val explanationdialog = explanationDialogBuider.create()
+        explanationdialog.show()
     }
 
 
