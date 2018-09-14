@@ -147,6 +147,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
             filteredNotes[index].onDeselect()
         }
         notifyDataSetChanged()
+        actionBarCallback.finishActionBar()
         selectCount = 0
         multiSelect = false
     }

@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import infrrd.ai.nevernote.objects.AppPreferences
 import infrrd.ai.nevernote.objects.Trash
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -40,7 +41,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private var notesDataset: MutableList<Note> = ArrayList()
+    private var notesDataset: MutableList<Note> = arrayListOf()
     private var trashNotes: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
@@ -82,6 +83,10 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         camera.setOnClickListener {
             note_actions.collapse()
             takePicture()
+        }
+        NotesServiceLayer().getallnotes {
+            notesDataset = it
+            viewAdapter.notifyDataSetChanged()
         }
     }
 
