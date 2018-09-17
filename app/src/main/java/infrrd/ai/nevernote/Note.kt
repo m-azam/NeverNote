@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.util.*
 
 class Note(
-        val title:String,val body:String,val created: Date, var selected: Boolean, var latitude:Double?, var longitude:Double?) {
+        val title:String,val body:String,val created: String, var selected: Boolean, var latitude:Double?, var longitude:Double?) {
 
     fun isSelected(): Boolean {
         return selected

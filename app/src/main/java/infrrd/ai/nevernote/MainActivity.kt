@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import infrrd.ai.nevernote.objects.AppPreferences
 import infrrd.ai.nevernote.objects.Trash
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -82,6 +83,10 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         camera.setOnClickListener {
             note_actions.collapse()
             takePicture()
+        }
+        NotesServiceLayer().getallnotes {
+            notesDataset = it
+            viewAdapter.notifyDataSetChanged()
         }
     }
 
@@ -195,7 +200,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             }
 
             fun getHeader(position:Int): String {
-                val header: String = notes.get(position).created.toString().subSequence(3,7).toString()+ " "+  notes.get(position).created.toString().subSequence(30,34)
+                val header: String = notes.get(position).created.subSequence(3,7).toString()+ " "+  notes.get(position).created.subSequence(30,34)
                 return header
             }
         }

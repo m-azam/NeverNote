@@ -123,7 +123,7 @@ class NewNote: AppCompatActivity() {
                     Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
 
                     var gson = Gson()
-                    var newNote = Note(title,body,Date(System.currentTimeMillis()), false, latitiude, longitude)
+                    var newNote = Note(title,body,Date(System.currentTimeMillis()).toString(), false, latitiude, longitude)
                     val returnIntent = Intent()
                     returnIntent.putExtra("result",gson.toJson(newNote))
                     returnIntent.putExtra("Position",position)

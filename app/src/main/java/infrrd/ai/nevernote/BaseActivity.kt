@@ -75,7 +75,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         when (item.itemId) {
             R.id.trash -> {
                 val intent = Intent(this, Trash::class.java)
-                startActivity(intent)            }
+                startActivity(intent)
+            }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
             }
