@@ -4,17 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.SearchView
 import android.widget.Toast
 import infrrd.ai.nevernote.objects.AppPreferences
-import infrrd.ai.nevernote.objects.Trash
 import kotlinx.android.synthetic.main.base_activity.*
+import android.app.Activity
+
+
 
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,13 +74,21 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.trash -> {
-                val intent = Intent(this, Trash::class.java)
-                startActivity(intent)            }
+                if(this !is Trash) {
+                    val intent = Intent(this, Trash::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                }
+            }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()
             }
             R.id.all_notes -> {
-                Toast.makeText(this, "all_notes button clicked", Toast.LENGTH_SHORT).show()
+                if(this !is MainActivity) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intent)
+                }
             }
             R.id.sign_out -> {
                 AppPreferences.loginValidity = false

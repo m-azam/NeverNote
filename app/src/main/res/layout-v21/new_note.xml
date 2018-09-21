@@ -10,6 +10,28 @@
         android:layout_height="?android:attr/actionBarSize"
         android:elevation="4dp"
         />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progress_bar"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical"
+        android:visibility="gone"
+        />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55"/>
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_vertical"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45"/>
 
     <EditText
         android:id="@+id/note_title"

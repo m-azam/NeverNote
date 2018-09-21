@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.ActionMode
@@ -17,7 +16,6 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
-import android.support.v4.view.GravityCompat
 import android.util.Log
 import android.view.Menu
 import android.support.v7.widget.SearchView
@@ -26,31 +24,37 @@ import android.view.View
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import infrrd.ai.nevernote.objects.AppPreferences
-import infrrd.ai.nevernote.objects.Trash
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.base_activity.*
 import java.io.File
 
 class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.OnQueryTextListener,
          ActionBarCallBack.OnDeleteSelectionListener {
 
     override var actionMode: ActionMode? = null
-    private lateinit var sampleVariable:String
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var notesDataset: MutableList<Note> = ArrayList()
-    private var trashNotes: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
-    val editNote = {position:Int, note:Note ->
+    val editNote = { position:Int, note:Note ->
         val intent = Intent(this, NewNote::class.java)
         intent.putExtra("Title",note.title)
         intent.putExtra("Body",note.body)
         intent.putExtra("Position",position)
         startActivityForResult(intent,2)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        nav_view.menu.getItem(0).setChecked(true)
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -83,6 +87,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             note_actions.collapse()
             takePicture()
         }
+        loadTasks()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -156,31 +161,11 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             2 -> {
 
                 if (resultCode == Activity.RESULT_OK) {
-                    var gson = Gson()
-                    var new_note: Note = gson.fromJson(data?.getStringExtra("result"),
-                            object : TypeToken<Note>(){}.type)
-                    var position:Int? = data?.getIntExtra("Position",-1)
-
-                    if(position == -1) {
-                        Log.d("inside if","lolol")
-                        notesDataset.add(0,new_note)
-
-                        viewAdapter.notifyItemInserted(0)
-
-                    }
-                    else {
-                        Log.d("inside else","lolol")
-                        position?.let {
-                            notesDataset.removeAt(position)
-                            notesDataset.add(position,new_note)
-                            viewAdapter.notifyItemChanged(position)
-                        }
-
-                    }
-
+                    loadTasks()
+                    Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
-
+                    Toast.makeText(this,"Note could not be saved",Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -198,7 +183,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             }
 
             fun getHeader(position:Int): String {
-                val header: String = notes.get(position).created.toString().subSequence(3,7).toString()+ " "+  notes.get(position).created.toString().subSequence(30,34)
+                val header: String = notes.get(position).created.subSequence(3,7).toString()+ " "+  notes.get(position).created.toString().subSequence(30,34)
                 return header
             }
         }
@@ -230,16 +215,48 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     }
 
     override fun onDeleteSelection() {
-        viewAdapter.selectedArray.sort()
-        viewAdapter.selectedArray.reverse()
-        for(index in viewAdapter.selectedArray) {
-            notesDataset.removeAt(index)
-        }
-        viewAdapter.selectedArray.clear()
-        viewAdapter.notifyDataSetChanged()
-        finishActionBar()
-    viewAdapter.selectCount = 0
-    viewAdapter.multiSelect = false
+        deleteTasks(viewAdapter.selectedArray)
+        viewAdapter.selectCount = 0
+        viewAdapter.multiSelect = false
+    }
 
+    private var disposable: Disposable? = null
+
+    private val apiService by lazy {
+        ApiService.create()
+    }
+
+    private fun loadTasks() {
+
+        disposable = apiService.getAllNotes()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result ->
+                            notesDataset.clear()
+                            notesDataset.addAll(result)
+                            viewAdapter.notifyDataSetChanged()
+                        },
+                        { error -> Log.d("ERROR", error.message) }
+                )
+    }
+    private fun deleteTasks(deleteList:List<Int>) {
+        apiService.trash(deleteList.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result ->
+                            Toast.makeText(this,"Items moved to Trash",Toast.LENGTH_LONG).show()
+                            finishActionBar()
+                            loadTasks()
+                        },
+                        { error -> Log.d("ERROR", error.message) }
+                )
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable?.dispose()
     }
 }

@@ -27,7 +27,6 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
     var selectCount: Int = 0
     var selectedArray: ArrayList<Int> = arrayListOf()
     var filteredNotes: MutableList<Note> = notesDataset
-    var trashNotes: MutableList<Note> = ArrayList()
 
     interface ActionBarCallback {
         var actionMode: ActionMode?
@@ -49,7 +48,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                 note.checkbox_multiselect.isChecked = !filteredNotes[adapterPosition].isSelected()
                 if (filteredNotes[adapterPosition].isSelected()) {
                     filteredNotes[adapterPosition].onDeselect()
-                    selectedArray.remove(adapterPosition)
+                    selectedArray.remove(notesDataset[adapterPosition].id)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
                     selectCount -= 1
                     if(selectCount == 0) {
@@ -58,7 +57,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                     }
                 } else {
                     filteredNotes[adapterPosition].onSelect()
-                    selectedArray.add(adapterPosition)
+                    selectedArray.add(notesDataset[adapterPosition].id)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                     selectCount += 1
                 }
@@ -74,7 +73,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
             if (!multiSelect) {
                 multiSelect = true
                 filteredNotes[adapterPosition].onSelect()
-                selectedArray.add(adapterPosition)
+                selectedArray.add(notesDataset[adapterPosition].id)
                 view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                 selectCount += 1
                 actionBarCallback.startActionBar()
@@ -147,7 +146,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
         for(index in selectedArray) {
             filteredNotes[index].onDeselect()
         }
-        notifyDataSetChanged()
+        selectedArray.clear()
         selectCount = 0
         multiSelect = false
     }
