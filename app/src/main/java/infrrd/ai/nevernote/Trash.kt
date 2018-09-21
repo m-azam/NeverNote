@@ -3,12 +3,9 @@ package infrrd.ai.nevernote
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.ActionMode
 import android.widget.Toast
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import kotlinx.android.synthetic.main.base_activity.*
 
 class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
@@ -18,6 +15,8 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var trashDataset: MutableList<Note> = ArrayList()
+    private var serviceLayer: NotesServiceLayer = NotesServiceLayer()
+
     override var actionMode: ActionMode? = null
 
     override fun onStart() {
@@ -42,7 +41,7 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
                 getSectionCallback(trashDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
         nav_view.menu.getItem(1).setChecked(true)
-        loadTasks()
+        loadNotes()
     }
 
     override fun getContentView(): Int {
@@ -75,59 +74,30 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
     }
 
     override fun onDeleteSelection() {
-        var deleteList:MutableList<Int>  = ArrayList()
-        viewAdapter.selectedArray.sort()
-        viewAdapter.selectedArray.reverse()
-
+        var deleteIds:MutableList<Int> = ArrayList()
         for(index in viewAdapter.selectedArray) {
-            deleteList.add(trashDataset[index].id)
+            deleteIds.add(viewAdapter.filteredNotes[index].id)
         }
-        viewAdapter.selectedArray.clear()
-        finishActionBar()
-        deleteTasks(deleteList)
-        viewAdapter.selectCount = 0
-        viewAdapter.multiSelect = false
+        deleteNotes(deleteIds)
     }
 
-    private fun deleteTasks(deleteList:List<Int>) {
-        apiService.delete(deleteList.toString())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
+    private fun deleteNotes(deleteList:List<Int>) {
+        serviceLayer.deleteNote({
                             Toast.makeText(this,"Notes Deleted", Toast.LENGTH_LONG).show()
-                            loadTasks()
-
-                        },
-                        { error -> Log.d("ERROR", error.message) }
-                )
-
-    }
-
-    private var disposable: Disposable? = null
-
-    private val apiService by lazy {
-        ApiService.create()
+                            finishActionBar()
+                            loadNotes()
+                        },deleteList.toString())
     }
 
 
-    private fun loadTasks() {
-
-        disposable = apiService.getTrash()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
-                            for(note in result) {
+    private fun loadNotes() {
+        serviceLayer.loadTrash{
+            for(note in it) {
                                 note.selected = false
                             }
-
                             trashDataset.clear()
-                            trashDataset.addAll(result)
+                            trashDataset.addAll(it)
                             viewAdapter.notifyDataSetChanged()
-                        },
-                        { error -> Log.d("ERROR", error.message) }
-                )
+                        }
     }
-
 }

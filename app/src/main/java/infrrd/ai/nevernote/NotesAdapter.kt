@@ -48,7 +48,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                 note.checkbox_multiselect.isChecked = !filteredNotes[adapterPosition].isSelected()
                 if (filteredNotes[adapterPosition].isSelected()) {
                     filteredNotes[adapterPosition].onDeselect()
-                    selectedArray.remove(notesDataset[adapterPosition].id)
+                    selectedArray.remove(adapterPosition)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.theme_light))
                     selectCount -= 1
                     if(selectCount == 0) {
@@ -57,7 +57,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
                     }
                 } else {
                     filteredNotes[adapterPosition].onSelect()
-                    selectedArray.add(notesDataset[adapterPosition].id)
+                    selectedArray.add(adapterPosition)
                     view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                     selectCount += 1
                 }
@@ -73,7 +73,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
             if (!multiSelect) {
                 multiSelect = true
                 filteredNotes[adapterPosition].onSelect()
-                selectedArray.add(notesDataset[adapterPosition].id)
+                selectedArray.add(adapterPosition)
                 view?.setBackgroundColor(ContextCompat.getColor(context, R.color.settings_background_on_touch))
                 selectCount += 1
                 actionBarCallback.startActionBar()
@@ -143,11 +143,13 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
     override fun getItemCount() = filteredNotes.size
 
     override fun onExitSelection() {
+        Log.d("Look here","inside on exit")
         for(index in selectedArray) {
             filteredNotes[index].onDeselect()
         }
         selectedArray.clear()
         selectCount = 0
         multiSelect = false
+        notifyDataSetChanged()
     }
 }

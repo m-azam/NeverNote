@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -37,6 +38,8 @@ class NewNote: AppCompatActivity() {
     private var longitude:Double? = null
     private val MY_PERMISSION_REQUEST_LOCATION = 1
     private var position:Int = -1
+    private var serviceLayer: NotesServiceLayer = NotesServiceLayer()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -122,6 +125,7 @@ class NewNote: AppCompatActivity() {
                     var newNote = Note(0,title,body,Date(System.currentTimeMillis()).toString(), false, latitiude, longitude)
                     addTask(newNote)
 
+
                 }
             }
             R.id.redo_text -> {
@@ -151,36 +155,19 @@ class NewNote: AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private var disposable: Disposable? = null
-
-
-    private val apiService by lazy {
-        ApiService.create()
-    }
 
     private fun addTask(note:Note) {
 
         progress_bar.visibility = View.VISIBLE
-        disposable = apiService.addNewNote(note.title,note.body,
-                note.selected,note.created,note.latitude,note.longitude)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
-                            progress_bar.visibility = View.GONE
-                            if(result.equals("true")) {
-                                setResult(Activity.RESULT_OK)
-                            }
-                            else {
-                                setResult(Activity.RESULT_CANCELED)
-                            }
-                            finish()
-
-                        },
-                        { error ->
-                            setResult(Activity.RESULT_CANCELED)
-                            finish() }
-                )
+        serviceLayer.addNewNote({progress_bar.visibility = View.GONE
+            if(it.equals("true")) {
+                setResult(Activity.RESULT_OK)
+            }
+            else {
+                setResult(Activity.RESULT_CANCELED)
+            }
+            finish()},{setResult(Activity.RESULT_CANCELED)
+            finish()},note)
     }
 
     fun initTextFormatListners() {

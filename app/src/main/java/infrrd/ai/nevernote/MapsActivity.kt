@@ -82,6 +82,7 @@ class MapsActivity() : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindo
         // Add marker and move the camera to the first postion stored in the notes adapter
         notes.add(Note(0,"Task1",
                 "Body1","Mon Sep 17 11:53:00 GMT+05:30 2018", false, 23.23, 34.23))
+
         for (notes in notes){
             notes.latitude?.let { lat ->
                 notes.longitude?.let { lon ->

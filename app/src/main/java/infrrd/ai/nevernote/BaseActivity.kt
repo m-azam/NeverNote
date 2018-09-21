@@ -79,6 +79,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intent)
                 }
+
             }
             R.id.completed -> {
                 Toast.makeText(this, "completed button clicked", Toast.LENGTH_SHORT).show()

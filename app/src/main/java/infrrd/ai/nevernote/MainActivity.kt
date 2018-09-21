@@ -22,11 +22,7 @@ import android.support.v7.widget.SearchView
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.base_activity.*
 import java.io.File
@@ -36,14 +32,16 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
 
     override var actionMode: ActionMode? = null
 
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var notesDataset: MutableList<Note> = ArrayList()
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
-
+    private var serviceLayer:NotesServiceLayer = NotesServiceLayer()
     val editNote = { position:Int, note:Note ->
+
         val intent = Intent(this, NewNote::class.java)
         intent.putExtra("Title",note.title)
         intent.putExtra("Body",note.body)
@@ -87,7 +85,8 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             note_actions.collapse()
             takePicture()
         }
-        loadTasks()
+        loadNotes()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -161,7 +160,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             2 -> {
 
                 if (resultCode == Activity.RESULT_OK) {
-                    loadTasks()
+                    loadNotes()
                     Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
                 }
                 if (resultCode == Activity.RESULT_CANCELED) {
@@ -183,7 +182,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             }
 
             fun getHeader(position:Int): String {
-                val header: String = notes.get(position).created.subSequence(3,7).toString()+ " "+  notes.get(position).created.toString().subSequence(30,34)
+                val header: String = notes.get(position).created.subSequence(3,7).toString()+ " "+  notes.get(position).created.subSequence(30,34)
                 return header
             }
         }
@@ -215,48 +214,26 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     }
 
     override fun onDeleteSelection() {
-        deleteTasks(viewAdapter.selectedArray)
-        viewAdapter.selectCount = 0
-        viewAdapter.multiSelect = false
+        var deleteIds:MutableList<Int> = ArrayList()
+        for(index in viewAdapter.selectedArray) {
+            deleteIds.add(viewAdapter.filteredNotes[index].id)
+        }
+        deleteNotes(deleteIds)
     }
 
-    private var disposable: Disposable? = null
-
-    private val apiService by lazy {
-        ApiService.create()
+    private fun loadNotes() {
+        serviceLayer.loadNotes {
+            notesDataset.clear()
+            notesDataset.addAll(it)
+            viewAdapter.notifyDataSetChanged()
+        }
     }
+    private fun deleteNotes(deleteList:List<Int>) {
+        serviceLayer.moveToTrash({
+            Toast.makeText(this,"Items moved to Trash",Toast.LENGTH_LONG).show()
+            loadNotes()
+            finishActionBar()
+        },deleteList.toString())
 
-    private fun loadTasks() {
-
-        disposable = apiService.getAllNotes()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
-                            notesDataset.clear()
-                            notesDataset.addAll(result)
-                            viewAdapter.notifyDataSetChanged()
-                        },
-                        { error -> Log.d("ERROR", error.message) }
-                )
-    }
-    private fun deleteTasks(deleteList:List<Int>) {
-        apiService.trash(deleteList.toString())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { result ->
-                            Toast.makeText(this,"Items moved to Trash",Toast.LENGTH_LONG).show()
-                            finishActionBar()
-                            loadTasks()
-                        },
-                        { error -> Log.d("ERROR", error.message) }
-                )
-
-    }
-
-    override fun onPause() {
-        super.onPause()
-        disposable?.dispose()
     }
 }
