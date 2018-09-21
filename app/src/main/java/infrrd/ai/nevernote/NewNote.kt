@@ -1,8 +1,6 @@
 package infrrd.ai.nevernote
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.ActionBar
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,9 +17,11 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import infrrd.ai.nevernote.services.NotesServiceLayer
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.new_note.*
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -38,6 +38,8 @@ class NewNote: AppCompatActivity() {
     private var longitude:Double? = null
     private val MY_PERMISSION_REQUEST_LOCATION = 1
     private var position:Int = -1
+    private var serviceLayer: NotesServiceLayer = NotesServiceLayer()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -120,25 +122,18 @@ class NewNote: AppCompatActivity() {
                     else {
                         body = note_body.html
                     }
-                    Toast.makeText(this,"Note Saved",Toast.LENGTH_LONG).show()
+                    var newNote = Note(0,title,body,Date(System.currentTimeMillis()).toString(), false, latitiude, longitude)
+                    addTask(newNote)
 
-                    var gson = Gson()
-                    var newNote = Note(title,body,Date(System.currentTimeMillis()).toString(), false, latitiude, longitude)
-                    val returnIntent = Intent()
-                    returnIntent.putExtra("result",gson.toJson(newNote))
-                    returnIntent.putExtra("Position",position)
-                    setResult(Activity.RESULT_OK, returnIntent)
-                    finish()
+
                 }
-                true
             }
             R.id.redo_text -> {
                 note_body.redo()
-                true
+
             }
             R.id.undo_text -> {
                 note_body.undo()
-                true
             }
 
             R.id.text_format -> {
@@ -156,10 +151,23 @@ class NewNote: AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-        var dateFormat: DateFormat = SimpleDateFormat("yyyy/MMM/dd")
-        var date =  Date()
 
         return super.onOptionsItemSelected(item)
+    }
+
+
+    private fun addTask(note:Note) {
+
+        progress_bar.visibility = View.VISIBLE
+        serviceLayer.addNewNote({progress_bar.visibility = View.GONE
+            if(it.equals("true")) {
+                setResult(Activity.RESULT_OK)
+            }
+            else {
+                setResult(Activity.RESULT_CANCELED)
+            }
+            finish()},{setResult(Activity.RESULT_CANCELED)
+            finish()},note)
     }
 
     fun initTextFormatListners() {

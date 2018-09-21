@@ -1,14 +1,12 @@
-package infrrd.ai.nevernote.objects
+package infrrd.ai.nevernote
 
 import android.os.Bundle
-import android.app.Activity
-import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ActionMode
-import infrrd.ai.nevernote.*
-
-import kotlinx.android.synthetic.main.activity_trash.*
+import android.widget.Toast
+import infrrd.ai.nevernote.services.NotesServiceLayer
+import kotlinx.android.synthetic.main.base_activity.*
 
 class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
         ActionBarCallBack.OnDeleteSelectionListener {
@@ -17,7 +15,15 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
     private lateinit var viewAdapter: NotesAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private var trashDataset: MutableList<Note> = ArrayList()
+    private var serviceLayer: NotesServiceLayer = NotesServiceLayer()
+
     override var actionMode: ActionMode? = null
+
+    override fun onStart() {
+        super.onStart()
+        nav_view.menu.getItem(1).setChecked(true)
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +40,8 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
                 true,
                 getSectionCallback(trashDataset))
         recyclerView.addItemDecoration(sectionItemDecoration)
+        nav_view.menu.getItem(1).setChecked(true)
+        loadNotes()
     }
 
     override fun getContentView(): Int {
@@ -66,16 +74,30 @@ class Trash : BaseActivity(),NotesAdapter.ActionBarCallback,
     }
 
     override fun onDeleteSelection() {
-        viewAdapter.selectedArray.sort()
-        viewAdapter.selectedArray.reverse()
+        var deleteIds:MutableList<Int> = ArrayList()
         for(index in viewAdapter.selectedArray) {
-            trashDataset.removeAt(index)
+            deleteIds.add(viewAdapter.filteredNotes[index].id)
         }
-        viewAdapter.selectedArray.clear()
-        viewAdapter.notifyDataSetChanged()
-        finishActionBar()
-        viewAdapter.selectCount = 0
-        viewAdapter.multiSelect = false
+        deleteNotes(deleteIds)
     }
 
+    private fun deleteNotes(deleteList:List<Int>) {
+        serviceLayer.deleteNote({
+                            Toast.makeText(this,"Notes Deleted", Toast.LENGTH_LONG).show()
+                            finishActionBar()
+                            loadNotes()
+                        },deleteList.toString())
+    }
+
+
+    private fun loadNotes() {
+        serviceLayer.loadTrash{
+            for(note in it) {
+                                note.selected = false
+                            }
+                            trashDataset.clear()
+                            trashDataset.addAll(it)
+                            viewAdapter.notifyDataSetChanged()
+                        }
+    }
 }

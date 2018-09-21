@@ -1,5 +1,6 @@
 package infrrd.ai.nevernote
 
+import android.util.Log
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
@@ -26,6 +27,7 @@ class ActionBarCallBack(private val onExitSelection: OnExitSelectionListener,
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
+        Log.d("asd","wer")
         onExitSelection.onExitSelection()
     }
 

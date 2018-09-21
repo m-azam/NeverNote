@@ -27,7 +27,6 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
     var selectCount: Int = 0
     var selectedArray: ArrayList<Int> = arrayListOf()
     var filteredNotes: MutableList<Note> = notesDataset
-    var trashNotes: MutableList<Note> = ArrayList()
 
     interface ActionBarCallback {
         var actionMode: ActionMode?
@@ -45,6 +44,7 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
 
         override fun onClick(view: View?) {
             if (multiSelect) {
+
                 note.checkbox_multiselect.isChecked = !filteredNotes[adapterPosition].isSelected()
                 if (filteredNotes[adapterPosition].isSelected()) {
                     filteredNotes[adapterPosition].onDeselect()
@@ -143,12 +143,13 @@ class NotesAdapter(private val editNote: ((position:Int,note:Note)->Unit)?,priva
     override fun getItemCount() = filteredNotes.size
 
     override fun onExitSelection() {
+        Log.d("Look here","inside on exit")
         for(index in selectedArray) {
             filteredNotes[index].onDeselect()
         }
-        notifyDataSetChanged()
+        selectedArray.clear()
         selectCount = 0
         multiSelect = false
+        notifyDataSetChanged()
     }
-
 }

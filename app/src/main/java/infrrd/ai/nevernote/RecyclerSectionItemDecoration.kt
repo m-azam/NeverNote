@@ -89,10 +89,10 @@ class RecyclerSectionItemDecoration(val headerHeight:Int,val sticky: Boolean, va
                 parent.paddingTop + parent.paddingBottom,
                 view.layoutParams.height)
 
-        view?.measure(childWidth,
+        view.measure(childWidth,
                 childHeight)
 
-        view?.layout(0,
+        view.layout(0,
                 0,
                 view.measuredWidth,
                 view.measuredHeight)

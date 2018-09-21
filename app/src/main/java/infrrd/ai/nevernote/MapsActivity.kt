@@ -2,7 +2,6 @@ package infrrd.ai.nevernote
 
 import android.Manifest
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -17,7 +16,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.widget.Toast
-import infrrd.ai.nevernote.objects.Trash
 import java.text.SimpleDateFormat
 import java.util.ArrayList
 
@@ -82,8 +80,9 @@ class MapsActivity() : BaseActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindo
         mMap = googleMap
         mMap.setOnInfoWindowClickListener(this)
         // Add marker and move the camera to the first postion stored in the notes adapter
-        notes.add(Note("Task1",
-                "Body1","7-JUNE-2013", false, 23.23, 34.23))
+        notes.add(Note(0,"Task1",
+                "Body1","Mon Sep 17 11:53:00 GMT+05:30 2018", false, 23.23, 34.23))
+
         for (notes in notes){
             notes.latitude?.let { lat ->
                 notes.longitude?.let { lon ->
