@@ -28,6 +28,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import infrrd.ai.nevernote.objects.AppPreferences
 import infrrd.ai.nevernote.objects.Trash
+import infrrd.ai.nevernote.services.NotesServiceLayer
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
@@ -35,7 +36,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
          ActionBarCallBack.OnDeleteSelectionListener {
 
     override var actionMode: ActionMode? = null
-    private lateinit var sampleVariable:String
+    private lateinit var sampleVariable: String
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
@@ -45,7 +46,8 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
-    val editNote = {position:Int, note:Note ->
+    val editNote = {
+        position:Int, note:Note ->
         val intent = Intent(this, NewNote::class.java)
         intent.putExtra("Title",note.title)
         intent.putExtra("Body",note.body)
@@ -82,6 +84,10 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
         camera.setOnClickListener {
             note_actions.collapse()
             takePicture()
+        }
+        NotesServiceLayer().getallnotes {
+            notesDataset.addAll(it)
+            viewAdapter.notifyDataSetChanged()
         }
     }
 
@@ -195,7 +201,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             }
 
             fun getHeader(position:Int): String {
-                val header: String = notes.get(position).created.toString().subSequence(3,7).toString()+ " "+  notes.get(position).created.toString().subSequence(30,34)
+                val header: String = notes.get(position).created.subSequence(3,7).toString()+ " "+  notes.get(position).created.subSequence(30,34)
                 return header
             }
         }
