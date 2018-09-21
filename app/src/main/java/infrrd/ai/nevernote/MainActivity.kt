@@ -36,7 +36,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
          ActionBarCallBack.OnDeleteSelectionListener {
 
     override var actionMode: ActionMode? = null
-    private lateinit var sampleVariable:String
+    private lateinit var sampleVariable: String
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: NotesAdapter
@@ -46,7 +46,8 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
     private lateinit var imageUri: Uri
     private val permissions = arrayOf("android.permission.CAMERA", "android.permission.WRITE_EXTERNAL_STORAGE")
 
-    val editNote = {position:Int, note:Note ->
+    val editNote = {
+        position:Int, note:Note ->
         val intent = Intent(this, NewNote::class.java)
         intent.putExtra("Title",note.title)
         intent.putExtra("Body",note.body)
@@ -85,7 +86,7 @@ class MainActivity : BaseActivity(), NotesAdapter.ActionBarCallback, SearchView.
             takePicture()
         }
         NotesServiceLayer().getallnotes {
-            notesDataset = it
+            notesDataset.addAll(it)
             viewAdapter.notifyDataSetChanged()
         }
     }

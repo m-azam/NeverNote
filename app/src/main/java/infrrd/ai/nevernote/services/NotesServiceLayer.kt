@@ -13,7 +13,6 @@ class NotesServiceLayer {
         val callAsync: Call<MutableList<Note>> = service.getAllNotes()
         callAsync.enqueue(object: Callback<MutableList<Note>> {
             override fun onResponse(call: Call<MutableList<Note>>, response: Response<MutableList<Note>>) {
-
                 if(response.isSuccessful) {
                     passData(response.body()?.let { it }?: arrayListOf())
                 } else {
